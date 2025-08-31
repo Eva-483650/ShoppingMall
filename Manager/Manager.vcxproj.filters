@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts;xlf</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts;xlf</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="contactpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="loginwgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="orderpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="person.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="productpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="prosesspage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shoppingmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="slidenavigation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="contactpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="loginwgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="orderpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="person.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="productpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="prosesspage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="shoppingmanager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="slidenavigation.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="Manager_zh_CN.ts">
+      <Filter>Translation Files</Filter>
+    </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="contactpage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="loginwgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="orderpage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="productpage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="prosesspage.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="shoppingmanager.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\5.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\AMOLED.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\Aqua.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\ConsoleStyle.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\ElegantDark.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\LICENSE">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\MacOS.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="debug\Manager_zh_CN.qm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="release\Manager_zh_CN.qm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\ManjaroMix.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\MaterialDark.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\NeonButtons.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\README.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\Ubuntu.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\QSS_IMG\go-down-symbolic.symbolic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\QSS_IMG\go-next-symbolic.symbolic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\QSS_IMG\go-previous-symbolic.symbolic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\QSS_IMG\go-up-symbolic.symbolic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qss\QSS_IMG\object-select-symbolic.symbolic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="debug\qmake_qmake_qm_files.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <QtRcc Include="release\qmake_qmake_qm_files.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <QtRcc Include="src.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+</Project>
