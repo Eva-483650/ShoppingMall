@@ -6,7 +6,7 @@ MySocket::MySocket(qintptr sockDesc, QObject *parent) :
 {
     connect(this, SIGNAL(readyRead()), this, SLOT(socket_recvData()));
     connect(this, SIGNAL(disconnected()), this, SLOT(socket_disConnected()));
-    //qDebug()<<QString("服务端socket端口：%1").arg(sockDesc);
+    qDebug()<<QString("服务端socket端口：%1").arg(sockDesc);
 }
 
 MySocket::~MySocket()
@@ -33,7 +33,7 @@ void MySocket::socket_recvData(void)
 }
 
 void MySocket::socket_disConnected(){
-    //qDebug()<<"Mysocket断开连接";
+    qDebug()<<"Mysocket断开连接";
     emit signal_socket_disconnected(m_sockDesc);
 }
 

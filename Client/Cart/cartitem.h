@@ -2,50 +2,60 @@
 #define CARTITEM_H
 
 #include <QWidget>
-#include<QMouseEvent>
-#include<QAction>
-#include<QMenu>
-#include<QListWidgetItem>
-#include"../Shop/product.h"
-#include"../person.h"
-namespace Ui {
-class CartItem;
-}
+#include <QTimer>
+#include <QListWidgetItem>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class CartItem; }
+QT_END_NAMESPACE
 
 class CartItem : public QWidget
 {
-    Q_OBJECT
-
+	Q_OBJECT
 public:
-    CartItem(int pro_id,QString pro_address,QString pro_name,int pro_price,int tolprice,int initnum);
-    ~CartItem();
-    void setPicture(QString url);
-    void setSpinNum(int num);
-    int getSpinNum();
-    int getprice();
-    int getProId();
-    bool getChecked();
-    void mousePressEvent(QMouseEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
-    void refreshMax(int maxnum);
-    int num;
-    int tolprice;//某一商品的总价
-    QListWidgetItem *widgetitem;
+	explicit CartItem(int id,
+		const QString& pictureAddress,
+		const QString& name,
+		int unitPrice,
+		int initQty,
+		QWidget* parent = nullptr);
+	~CartItem() override;
 
-private:
-    Ui::CartItem *ui;
-    int price;
-    int pro_id;
+	void updateTotalLabel(const QString& text);
 
+	int  productId()     const { return m_id; }
+	int  unitPrice()     const { return m_unitPrice; }
+	int  currentQty()    const;
+	int  confirmedQty()  const { return m_confirmedQty; }
+	bool isChecked()     const;
+	int  totalPrice()    const { return unitPrice() * currentQty(); }
+
+	void setConfirmedQty(int q) { m_confirmedQty = q; }
+	void setLoading(bool on);
+	void setPicture(const QString& relPath);
+	void setQuantity(int qty);
+
+	QListWidgetItem* listItem = nullptr;
 
 signals:
-    void signal_checkedchanged(int num);
-    void signal_valchanged(int pro_id,int num);
-    void signal_delItem(int pro_id);
+	void sigQuantityChanged(int proId, int newQty);
+	void sigSelectionChanged(int proId, bool checked);
+	void sigDeleteRequest(int proId);
 
-private slots:
-    void setChecked();
-    void valChanged(int num);
+public slots:
+	void onSpinChanged(int value);
+	void onChecked(bool c);
+	void onDeleteClicked();
+
+private:
+	void setupUI();
+
+private:
+	Ui::CartItem* ui;
+	int m_id;
+	int m_unitPrice;
+	int m_confirmedQty;
+	bool m_loading = false;
 };
 
-#endif // NEWCOURIERITEM_H
+#endif // CARTITEM_H

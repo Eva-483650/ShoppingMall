@@ -1,4 +1,4 @@
-    #include "loginwgt.h"
+#include "loginwgt.h"
 #include "ui_loginwgt.h"
 #include <QtDebug>
 
@@ -9,9 +9,11 @@ LoginWgt::LoginWgt(ShoppingManager *p) :
     this->setStyleSheet("QLineEdit::hover{background-color:rgb(0, 170, 255);border:0.5px solid rgb(0, 255, 255);border-width:0.5px;}");
     client = p;
 
-    // 使用 Qt6 推荐的 QRegularExpression 与 QRegularExpressionValidator
-    QRegularExpression ps("^[A-Za-z0-9]+$");                      // 密码: 仅字母/数字
-    QRegularExpression us("^[A-Za-z0-9\\u4e00-\\u9fa5]+$");       // 用户名: 包含中文
+	// 用户名: 中文(汉字) + 英文数字
+	QRegularExpression us("^[\\p{Han}A-Za-z0-9]+$");               // 或: "^[A-Za-z0-9\\x{4E00}-\\x{9FA5}]+$"
+	// 密码: 仅英文字母数字
+	QRegularExpression ps("^[A-Za-z0-9]+$");
+
     auto *validatorUser = new QRegularExpressionValidator(us, this);
     auto *validatorPass = new QRegularExpressionValidator(ps, this);
     ui->line_user->setValidator(validatorUser);

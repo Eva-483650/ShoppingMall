@@ -32,6 +32,8 @@ private:
 private slots:
     void loginUser();
     void registerUser();
+    void on_lab_register_link_linkActivated(const QString &link);
+
 signals:
     void signal_login(QJsonObject);
 };

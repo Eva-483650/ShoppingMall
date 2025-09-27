@@ -11,7 +11,15 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>商城</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget#ShopPage {
+    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,stop:0 #e8e6fb, stop:0.6 #d6c9f7, stop:1 #b8a4e6);
+    font-family: "微软雅黑";
+}
+   </string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -28,25 +36,49 @@
        <height>60</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget#searchbar {
+    background: rgba(239,235,251,0.85);
+    border-radius: 16px;
+    font-family: "微软雅黑";
+}
+      </string>
+     </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="topMargin">
-       <number>4</number>
+       <number>8</number>
       </property>
       <property name="bottomMargin">
-       <number>4</number>
+       <number>8</number>
       </property>
       <item>
        <widget class="QLineEdit" name="lineEdit">
         <property name="styleSheet">
-         <string notr="true">QLineEdit{ background-color: rgba(255,240,255,120); }QLineEdit:focus{background-color: rgb(255,255,255)}
-QLineEdit:enabled{ 
-  border: 1px solid #999999;
-  border-radius: 3px;
-  color:#666666;
-  font-size:12pt;
+         <string notr="true">
+QLineEdit {
+    background-color: #f5f3fa;
+    border: 1px solid #d6c9f7;
+    border-radius: 10px;
+    color: #6c5b7b;
+    font-size: 14pt;
+    font-family: "微软雅黑";
+    padding: 6px 10px;
 }
-padding:5px;
-</string>
+QLineEdit:focus {
+    background-color: #fff;
+    border: 1.5px solid #a18cd1;
+}
+         </string>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="placeholderText">
+         <string>搜索商品</string>
         </property>
        </widget>
       </item>
@@ -61,7 +93,7 @@ padding:5px;
         <property name="minimumSize">
          <size>
           <width>80</width>
-          <height>0</height>
+          <height>36</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -70,13 +102,28 @@ padding:5px;
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>14</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="styleSheet">
-         <string notr="true">border-radius: 10px;
-border: 1px solid;
-color:white;
-background-color:rgb(159, 214, 149);
-font: 57 11pt &quot;Adobe Myungjo Std M&quot;;
-padding:4px;</string>
+         <string notr="true">
+QPushButton {
+    border-radius: 16px;
+    border: none;
+    color: #fff;
+    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,stop:0 #b8a4e6,stop:1 #a18cd1);
+    font: bold 14pt "微软雅黑";
+    padding: 6px 18px;
+    box-shadow: 0 2px 8px rgba(160,140,209,0.10);
+}
+QPushButton:hover {
+    background: #a18cd1;
+}
+         </string>
         </property>
         <property name="text">
          <string>查找</string>
@@ -104,19 +151,36 @@ padding:4px;</string>
        </property>
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <family>微软雅黑</family>
+         <pointsize>15</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QListWidget{border:1px solid gray; color:black; }
-QListWidget::Item{padding-top:20px; padding-bottom:4px; }
-QListWidget::Item:hover{
-background:rgb(170, 255, 255);
+        <string notr="true">
+QListWidget {
+    border: 1.5px solid #a18cd1;
+    background: #f5f3fa;
+    border-radius: 12px;
+    color: #6c5b7b;
+    padding: 6px 0;
+    font-family: "微软雅黑";
+    font-size: 15pt;
 }
-QListWidget::item:selected{
-background:rgb(85, 202, 225);
-color:rgb(255, 85, 0);
-}</string>
+QListWidget::Item {
+    padding: 12px 4px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+}
+QListWidget::Item:hover {
+    background: #e8e6fb;
+    color: #a18cd1;
+}
+QListWidget::item:selected {
+    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,stop:0 #b8a4e6,stop:1 #a18cd1);
+    color: #fff;
+}
+        </string>
        </property>
        <property name="resizeMode">
         <enum>QListView::Fixed</enum>

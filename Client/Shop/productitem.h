@@ -4,6 +4,7 @@
 #include <QWidget>
 #include<QMouseEvent>
 #include"textticker.h"
+
 namespace Ui {
 class ProductItem;
 }
@@ -23,6 +24,7 @@ public:
     void setId(QString id);
     int getId();
     void mouseDoubleClickEvent(QMouseEvent *event);
+
 private:
     Ui::ProductItem *ui;
     int id;

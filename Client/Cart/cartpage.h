@@ -2,45 +2,70 @@
 #define CARTPAGE_H
 
 #include <QWidget>
-#include "../Shop/product.h"
-#include "cartitem.h"
-#include<QMap>
-#include<QMessageBox>
-#include"../shoppingclient.h"
-#include<QJsonArray>
-#include<QJsonObject>
-namespace Ui {
-class CartPage;
-}
+#include <QHash>
+#include <QSet>
+
+class QListWidgetItem;
+class ShoppingClient;
+class Product;
+class CartItem;
+class QTimer;
+
+namespace Ui { class CartPage; }
 
 class CartPage : public QWidget
 {
-    Q_OBJECT
-
+	Q_OBJECT
 public:
-    explicit CartPage(QWidget *parent = nullptr);
-    ~CartPage();
-    void showEvent(QShowEvent *event);
-    QMap<int,CartItem*> cartlist;//通过商品的pro_id来查找cartlist
-    int tolprice;//购物车被选中商品的总金额
-    ShoppingClient *client;
+	explicit CartPage(QWidget* parent = nullptr);
+	~CartPage() override;
 
-private:
-    Ui::CartPage *ui;
-    void loadCart();
-    bool isCached;
+	ShoppingClient* client = nullptr;
+
+	void resetCache();   // 登录后可调用
+
+signals:
+	void signal_updateUserMoney(int newMoney);
+	void signal_updateCartMoney(int change);
+	void signal_addToCartResult(bool success, const QString& message);  // 新增信号
 
 public slots:
-    void addToCart(Product*);//将商品加入购物车
-    void updateCart(int pro_id,int num);//更新购物车商品数量
-    void deleteCart(int pro_id);//删除购物车项
-    void addChange(int);//购物车被选中项改变购物车总金额
-    void buySth();//购买物品
-    void updateCartMoney(int change);//购买后修改购物车总金额
-signals:
-    void signal_updateUserMoney(int);
-    void signal_updateCartMoney(int);
+	void addToCart(Product* product);
 
+private slots:
+	void showEvent(QShowEvent* event) override;
+
+	// 来自 CartItem
+	void onItemQuantityChanged(int proId, int newQty);
+	void onItemSelectionChanged(int proId, bool checked);
+	void onItemDelete(int proId);
+
+	// 防抖后真正提交
+	void onCommitQuantity(int proId);
+
+	void buySth();
+	void updateCartMoney(int change); // 兼容旧的调用
+
+private:
+	void loadCart();
+	void recalcTotal();
+	void clearAll();
+
+	void commitQuantityToServer(int proId, int newQty);   // 同步发送
+	void deleteCartServer(int proId);                     // 删除(服务器)
+	void removeItemLocal(int proId);                      // 本地删除
+	void scheduleDebounce(int proId);                     // 启动防抖
+
+private:
+	Ui::CartPage* ui = nullptr;
+
+	// 数据
+	QHash<int, CartItem*> m_items;       // proId -> CartItem
+	QHash<int, QTimer*>   m_debounce;    // proId -> timer
+	QSet<int>             m_pending;     // 正在提交的 id
+
+	bool m_cached = false;
+	int  m_total = 0;
 };
 
 #endif // CARTPAGE_H

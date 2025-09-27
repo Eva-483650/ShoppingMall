@@ -2,13 +2,13 @@
 #define SHOPPAGE_H
 
 #include <QWidget>
-#include "../shoppingclient.h"
+#include "shoppingclient.h"
 #include<QStackedWidget>
 #include<QVector>
 #include<QMap>
 #include "product.h"
 #include "productitem.h"
-#include"productpage.h"
+#include "productpage.h"
 #include<QAction>
 #include<QActionEvent>
 #include<QRegularExpression>
@@ -33,6 +33,8 @@ private:
     QStackedWidget *m_stackedwidget;
     bool isCached;
     QVector<bool>stack_isCached;
+    ProductPage* m_activeProductPage = nullptr;
+
     void initClassification();
     void contextMenuEvent(QContextMenuEvent *event);
 public slots:

@@ -53,9 +53,6 @@
     <ClCompile Include="Cart\cartitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cart\cartpage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Contact\contactpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,15 +104,15 @@
     <ClCompile Include="Shop\textticker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cart\cartpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Home\carouselimagewindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Cart\cartitem.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Cart\cartpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Contact\contactpage.h">
@@ -142,9 +139,6 @@
     <ClInclude Include="person.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shop\product.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="Shop\productitem.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -164,6 +158,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Shop\textticker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Cart\cartpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -319,5 +316,10 @@
     <QtRcc Include="src.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shop\product.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

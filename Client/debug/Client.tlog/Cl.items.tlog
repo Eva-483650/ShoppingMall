@@ -21,7 +21,6 @@ D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Shop\textticke
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\qrc_src.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\qrc_src.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_carouselimagewindow.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_carouselimagewindow.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_cartitem.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_cartitem.obj
-D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_cartpage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_cartpage.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_contactpage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_contactpage.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_homepage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_homepage.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_loginwgt.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_loginwgt.obj
@@ -36,3 +35,4 @@ D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_shop
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_shoppingclient.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_shoppingclient.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_slidenavigation.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_slidenavigation.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_textticker.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_textticker.obj
+D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_cartpage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_cartpage.obj

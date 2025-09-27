@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RCC>
     <qresource prefix="/">
         <file>images/icons/icon1.png</file>
@@ -7,30 +6,39 @@
         <file>images/icons/picerror.png</file>
         <file>images/login/1.png</file>
         <file>images/login/7.png</file>
-        <file>images/picturewall/1.png</file>
-        <file>images/picturewall/10.png</file>
-        <file>images/picturewall/2.png</file>
-        <file>images/picturewall/3.png</file>
-        <file>images/picturewall/4.png</file>
-        <file>images/picturewall/5.png</file>
-        <file>images/picturewall/6.png</file>
-        <file>images/picturewall/7.png</file>
-        <file>images/picturewall/8.png</file>
-        <file>images/picturewall/9.png</file>
-        <file>images/products/1.png</file>
-        <file>images/products/10.png</file>
-        <file>images/products/2.png</file>
-        <file>images/products/3.png</file>
-        <file>images/products/4.png</file>
-        <file>images/products/5.png</file>
-        <file>images/products/6.png</file>
-        <file>images/products/7.png</file>
-        <file>images/products/8.png</file>
-        <file>images/products/9.png</file>
-        <file>images/products/picerror.jpg</file>
         <file>images/users/82342070_p0-min.jpg</file>
         <file>images/users/illust_35548907_20190130_151911-min.jpg</file>
         <file>images/users/illust_54355379_20190130_152051-min.jpg</file>
         <file>images/users/illust_58445343_20190421_183611-min.png</file>
+        <file>images/products/adidas_tshirt.jpg</file>
+        <file>images/products/chanel.jpg</file>
+        <file>images/products/error.jpg</file>
+        <file>images/products/iphone17.jpg</file>
+        <file>images/products/lenovo.jpg</file>
+        <file>images/products/mate60.jpg</file>
+        <file>images/products/midea_airfryer.jpg</file>
+        <file>images/products/nike.jpg</file>
+        <file>images/products/oppo_earbuds.jpg</file>
+        <file>images/products/philips.jpg</file>
+        <file>images/products/xiaomi_band8.jpg</file>
+        <file>images/login/bg_login.jpg</file>
+        <file>images/login/bg_register_wizard.jpg</file>
+        <file>images/picturewall/1.jpg</file>
+        <file>images/picturewall/2.jpg</file>
+        <file>images/picturewall/3.jpg</file>
+        <file>images/picturewall/4.jpg</file>
+        <file>images/picturewall/5.jpg</file>
+        <file>images/picturewall/6.jpg</file>
+        <file>images/picturewall/7.jpg</file>
+        <file>images/picturewall/8.jpg</file>
+        <file>images/picturewall/9.jpg</file>
+        <file>images/picturewall/10.jpg</file>
+        <file>images/picturewall/11.jpg</file>
+        <file>images/picturewall/12.jpg</file>
+        <file>images/picturewall/13.jpg</file>
+        <file>images/picturewall/15.jpg</file>
+        <file>images/picturewall/14.jpg</file>
+        <file>images/icons/up-arrow.png</file>
+        <file>images/icons/down-arrow.png</file>
     </qresource>
 </RCC>

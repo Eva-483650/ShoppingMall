@@ -2,58 +2,62 @@
 #define SHOPPINGCLIENT_H
 
 #include <QWidget>
-#include "slidenavigation.h"
 #include <QTcpSocket>
-#include <QUdpSocket>
-#include<QMessageBox>
-#include<QJsonDocument>
-#include<QJsonObject>
-#include<QJsonArray>
-#include <QMouseEvent>
-#include <QPainter>
-#include<QJsonParseError>
-#include"person.h"
+#include <QJsonObject>
+#include <QJsonArray>
+#include "person.h"
+#include "slidenavigation.h"
+
 extern QString FLAG_CHARACTER;
 extern QString PIC_PATH;
-namespace Ui {
-class ShoppingClient;
-}
+
+namespace Ui { class ShoppingClient; }
 
 class ShoppingClient : public QWidget
 {
-    Q_OBJECT
-
+	Q_OBJECT
 public:
-    explicit ShoppingClient(QWidget *parent = nullptr);
-    ~ShoppingClient();
-    void setServerIP(QString ip);
-    void setServerPort(qintptr port);
-    bool connectTo();
-    bool disConnect();
-    QTcpSocket *m_socket;
-    void closeEvent(QCloseEvent *event);
-    QByteArray sendCHTTPMsg(QString CHTTP,QJsonObject jsonobj);
-    QJsonArray parseResponse(QByteArray data);
-    QString parseHead(QByteArray data);
-    void error(QChar character,QString errmsg);
-    bool getConnected();
+	explicit ShoppingClient(QWidget* parent = nullptr);
+	~ShoppingClient();
 
-    Person* getPerson();
+	void setServerIP(QString ip);
+	void setServerPort(qintptr port);
+
+	bool connectTo();
+	bool disConnect();
+
+	QByteArray sendCHTTPMsg(QString CHTTP, QJsonObject jsonobj);
+	QJsonArray parseResponse(QByteArray data);
+	QString parseHead(QByteArray data);
+
+	void error(QChar character, QString errmsg);
+	bool getConnected();
+
+	Person* getPerson();
+
+protected:
+	void closeEvent(QCloseEvent* event) override;
+
+signals:
+	void signal_someonelogin(Person*);
+	void userLoggedIn(int userId);     // 新增：广播登录完成
+
+private slots:
+	void changePage(qintptr index);
+	void someoneLogin(QJsonObject obj);
 
 private:
-    Ui::ShoppingClient *ui;
-    void helpConnect();//连接信号
-    QString server_IP;//服务端IP地址
-    qintptr server_port;//服务端端口
-    Person *logined_user;
-    bool isconnected;
+	void helpConnect();
 
-public slots:
-    void changePage(qintptr index);
-private slots:
-    void someoneLogin(QJsonObject);
-signals:
-    void signal_someonelogin(Person*);
+private:
+	Ui::ShoppingClient* ui = nullptr;
+	QTcpSocket* m_socket = nullptr;
+
+	QString server_IP;
+	qintptr server_port = 0;
+
+	Person* logined_user = nullptr;    // 初始化
+	bool isconnected = false;
 };
 
 #endif // SHOPPINGCLIENT_H

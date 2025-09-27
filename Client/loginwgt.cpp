@@ -16,6 +16,21 @@ LoginWgt::LoginWgt(ShoppingClient *p) :
     connect(ui->btn_login,SIGNAL(clicked()),this,SLOT(loginUser()));
     connect(ui->btn_register,SIGNAL(clicked()),this,SLOT(registerUser()));
     connect(this,SIGNAL(signal_login(QJsonObject)),client,SLOT(someoneLogin(QJsonObject)));
+    connect(ui->btn_togglePwd, &QToolButton::clicked, this, [=]{
+        bool isPassword = ui->line_password->echoMode() == QLineEdit::Password;
+        ui->line_password->setEchoMode(isPassword ? QLineEdit::Normal : QLineEdit::Password);
+        ui->btn_togglePwd->setText(isPassword ? "🙈" : "👁");
+    });
+
+    ui->lab_register_link->setText(
+        R"(<span style="color:#6a5a84;">还没有账号？</span>
+       <a href="register" style="text-decoration:none;color:#8b78c4;">立即注册 &gt;</a>)");
+    ui->lab_register_link->setTextFormat(Qt::RichText);
+    ui->lab_register_link->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->lab_register_link->setOpenExternalLinks(false);
+    ui->lab_register_link->setCursor(Qt::PointingHandCursor);
+
+
 }
 
 LoginWgt::~LoginWgt()
@@ -27,7 +42,7 @@ void LoginWgt::paintEvent(QPaintEvent*)
 {
     QPainter paint_win(this);
     QPixmap map_win;
-    map_win.load(":/images/login/1.png");
+    map_win.load(":/images/login/bg_login.jpg");
     paint_win.drawPixmap(0,0,this->width(),this->height(),map_win);
 }
 
@@ -45,7 +60,7 @@ void LoginWgt::loginUser(){
     if(_username != "" && _password != ""){
         QJsonObject obj;
         QString sql = QString("user_name = '%1' AND user_password = '%2'").arg(_username).arg(_password);
-        //qDebug()<<sql;
+        qDebug()<<sql;
         obj.insert("want",QJsonValue("*"));
         obj.insert("isDistinct",QJsonValue("true"));
         obj.insert("restriction",QJsonValue(sql));
@@ -74,5 +89,14 @@ void LoginWgt::loginUser(){
 void LoginWgt::registerUser(){
     RegisterWgt *p = new RegisterWgt(client);
     p->show();
+}
+
+
+void LoginWgt::on_lab_register_link_linkActivated(const QString &link)
+{
+    qDebug() << "Register link click:" << link; // 应输出 "register"
+    RegisterWgt *dlg = new RegisterWgt(client);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->show();
 }
 

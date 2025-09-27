@@ -5,20 +5,44 @@
 #include <QtMath>
 #include <QDebug>
 
-SlideNavigation::SlideNavigation(QWidget *parent)
+SlideNavigation::SlideNavigation(QWidget* parent)
     : QWidget(parent)
 {
-    m_barStartColor = QColor(121,121,121);
-    m_barEndColor = QColor(78,78,78);
-    m_itemStartColor = QColor(46,132,243);
-    m_itemEndColor = QColor(39,110,203);
-    m_itemTextColor = Qt::white;
-    m_itemLineColor = QColor(255,107,107);
-    m_barRadious = 0;
-    m_itemRadious = 0;
-    m_space = 25;
+    /************* 主题颜色（仅此处改动） **************
+     * 背景条：浅→稍深淡紫
+     * 选中块：浅亮薰衣草 → 稍深薰衣草
+     * 文字：深一点的紫灰，提升对比
+     * 线条：深紫（如果启用 ItemLineStyle）
+     *
+     * 如果想用“金色激活”风格，把下面的 Option B 注释去掉即可。
+     **************************************************/
+
+     // Bar (整体背景) 渐变：顶部更亮，底部稍深
+    m_barStartColor = QColor("#EFE9FF");   // 很浅的淡紫
+    m_barEndColor = QColor("#D6C7F6");   // 略深一些的淡紫
+
+    // Item (选中滑块) 渐变 Option A：淡紫高亮
+    m_itemStartColor = QColor("#CDB9F9");  // 亮一点
+    m_itemEndColor = QColor("#B090F2");  // 深一点
+
+    // -------- Option B (金色激活方案) ----------
+    // m_itemStartColor = QColor("#FFBD48");
+    // m_itemEndColor   = QColor("#F29B21");
+    // ------------------------------------------
+
+    // 文本颜色：与浅背景对比，使用深紫灰；若想继续白色可改回 Qt::white
+    m_itemTextColor = QColor("#4A3A68");
+
+    // 线条强调色（如果启用 ItemTop / Bottom / Rect）
+    m_itemLineColor = QColor("#8A6FD8");  // 深一点的紫
+    // 若想与激活金色一致（用 Option B）可改 "#F2A242"
+
+    // 其余参数保持原样
+    m_barRadious = 14;        // 给导航条/选中块少许圆角更柔和（原为 0，可按需改回）
+    m_itemRadious = 14;
+    m_space = 28;             // 适度放大间距，字体呼吸感更好（原 25，可改回）
     m_itemLineWidth = 3;
-    m_itemLineStyle = ItemLineStyle::None;
+    m_itemLineStyle = ItemLineStyle::None; // 保持 None，不需要线条时不画
     m_orientation = Qt::Horizontal;
     m_enableKeyMove = false;
     m_totalTextWidth = 0;
@@ -30,9 +54,11 @@ SlideNavigation::SlideNavigation(QWidget *parent)
     m_slideTimer = new QTimer(this);
     m_slideTimer->setInterval(10);
     connect(m_slideTimer, SIGNAL(timeout()), this, SLOT(doSlide()));
+
     m_shakeTimer = new QTimer(this);
     m_shakeTimer->setInterval(10);
     connect(m_shakeTimer, SIGNAL(timeout()), this, SLOT(doShake()));
+
     setFocusPolicy(Qt::ClickFocus);
 }
 
@@ -41,15 +67,18 @@ SlideNavigation::~SlideNavigation()
 
 }
 
+/* 下面所有代码保持原样（除非上面 radius/space 你想回退）。
+ * ------------------ 你的原始实现开始 ------------------ */
+
 void SlideNavigation::addItem(QString str)
 {
-    if(str.isEmpty())
+    if (str.isEmpty())
         return;
-    QMap<int, QPair<QString,QRectF> >::iterator it = m_itemList.begin();
-    while(it != m_itemList.end())
+    QMap<int, QPair<QString, QRectF> >::iterator it = m_itemList.begin();
+    while (it != m_itemList.end())
     {
         QPair<QString, QRectF>& itemData = it.value();
-        if(str == itemData.first)
+        if (str == itemData.first)
             return;
         ++it;
     }
@@ -58,19 +87,19 @@ void SlideNavigation::addItem(QString str)
     int textWidth = fm.horizontalAdvance(str);
     int textHeight = fm.height();
     int itemCount = m_itemList.size();
-    if(itemCount > 0)
+    if (itemCount > 0)
     {
         QPointF topLeft, bottomRight;
-        if(m_orientation == Qt::Horizontal)
+        if (m_orientation == Qt::Horizontal)
         {
-            topLeft = QPointF(m_totalTextWidth,0);
-            m_totalTextWidth += textWidth+m_space;
+            topLeft = QPointF(m_totalTextWidth, 0);
+            m_totalTextWidth += textWidth + m_space;
             bottomRight = QPointF(m_totalTextWidth, m_totalTextHeight);
         }
         else
         {
             topLeft = QPointF(0, m_totalTextHeight);
-            m_totalTextHeight += textHeight+m_space;
+            m_totalTextHeight += textHeight + m_space;
             bottomRight = QPointF(m_totalTextWidth, m_totalTextHeight);
         }
         QRectF textRect(topLeft, bottomRight);
@@ -78,15 +107,15 @@ void SlideNavigation::addItem(QString str)
     }
     else
     {
-        if(m_orientation == Qt::Horizontal)
+        if (m_orientation == Qt::Horizontal)
         {
-            m_totalTextWidth = textWidth+m_space;
-            m_totalTextHeight = textHeight+m_space;//水平方向,水平占1个m_space,竖直占1个m_space
+            m_totalTextWidth = textWidth + m_space;
+            m_totalTextHeight = textHeight + m_space;
         }
         else
         {
-            m_totalTextWidth = textWidth+2*m_space;//竖直方向,水平占2个m_space,竖直占1个m_space
-            m_totalTextHeight = textHeight+m_space;
+            m_totalTextWidth = textWidth + 2 * m_space;
+            m_totalTextHeight = textHeight + m_space;
         }
         QPointF topLeft(0.0, 0.0);
         QPointF bottomRight(m_totalTextWidth, m_totalTextHeight);
@@ -94,19 +123,19 @@ void SlideNavigation::addItem(QString str)
         m_itemList.insert(itemCount, qMakePair(str, textRect));
     }
     setMinimumSize(m_totalTextWidth, m_totalTextHeight);
-    if(m_fixed)
+    if (m_fixed)
     {
-        if(m_orientation == Qt::Horizontal)
-            setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);//固定高度
+        if (m_orientation == Qt::Horizontal)
+            setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
         else
-            setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);//固定宽度
+            setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     }
     update();
 }
 
 void SlideNavigation::setBarStartColor(QColor color)
 {
-    if(color != m_barStartColor)
+    if (color != m_barStartColor)
     {
         m_barStartColor = color;
         update();
@@ -115,7 +144,7 @@ void SlideNavigation::setBarStartColor(QColor color)
 
 void SlideNavigation::setBarEndColor(QColor color)
 {
-    if(color != m_barEndColor)
+    if (color != m_barEndColor)
     {
         m_barEndColor = color;
         update();
@@ -124,7 +153,7 @@ void SlideNavigation::setBarEndColor(QColor color)
 
 void SlideNavigation::setItemStartColor(QColor color)
 {
-    if(color != m_itemStartColor)
+    if (color != m_itemStartColor)
     {
         m_itemStartColor = color;
         update();
@@ -133,7 +162,7 @@ void SlideNavigation::setItemStartColor(QColor color)
 
 void SlideNavigation::setItemEndColor(QColor color)
 {
-    if(color != m_itemEndColor)
+    if (color != m_itemEndColor)
     {
         m_itemEndColor = color;
         update();
@@ -142,7 +171,7 @@ void SlideNavigation::setItemEndColor(QColor color)
 
 void SlideNavigation::setItemTextColor(QColor color)
 {
-    if(color != m_itemTextColor)
+    if (color != m_itemTextColor)
     {
         m_itemTextColor = color;
         update();
@@ -151,7 +180,7 @@ void SlideNavigation::setItemTextColor(QColor color)
 
 void SlideNavigation::setItemLineColor(QColor color)
 {
-    if(color != m_itemLineColor)
+    if (color != m_itemLineColor)
     {
         m_itemLineColor = color;
         update();
@@ -160,7 +189,7 @@ void SlideNavigation::setItemLineColor(QColor color)
 
 void SlideNavigation::setBarRadious(int radious)
 {
-    if(radious>=0 && radious != m_barRadious)
+    if (radious >= 0 && radious != m_barRadious)
     {
         m_barRadious = radious;
         update();
@@ -169,7 +198,7 @@ void SlideNavigation::setBarRadious(int radious)
 
 void SlideNavigation::setItemRadious(int radious)
 {
-    if(radious>=0 && radious != m_itemRadious)
+    if (radious >= 0 && radious != m_itemRadious)
     {
         m_itemRadious = radious;
         update();
@@ -178,7 +207,7 @@ void SlideNavigation::setItemRadious(int radious)
 
 void SlideNavigation::setSpace(int space)
 {
-    if(space>=0 && space != m_space)
+    if (space >= 0 && space != m_space)
     {
         m_space = space;
         update();
@@ -187,7 +216,7 @@ void SlideNavigation::setSpace(int space)
 
 void SlideNavigation::setItemLineWidth(int width)
 {
-    if(width>=0 && width != m_itemLineWidth)
+    if (width >= 0 && width != m_itemLineWidth)
     {
         m_itemLineWidth = width;
         update();
@@ -196,7 +225,7 @@ void SlideNavigation::setItemLineWidth(int width)
 
 void SlideNavigation::setItemLineStyle(SlideNavigation::ItemLineStyle style)
 {
-    if(style != m_itemLineStyle)
+    if (style != m_itemLineStyle)
     {
         m_itemLineStyle = style;
         update();
@@ -205,7 +234,7 @@ void SlideNavigation::setItemLineStyle(SlideNavigation::ItemLineStyle style)
 
 void SlideNavigation::setOrientation(Qt::Orientation orientation)
 {
-    if(orientation != m_orientation)
+    if (orientation != m_orientation)
     {
         m_orientation = orientation;
         update();
@@ -214,7 +243,7 @@ void SlideNavigation::setOrientation(Qt::Orientation orientation)
 
 void SlideNavigation::setFixed(bool fixed)
 {
-    if(fixed != m_fixed)
+    if (fixed != m_fixed)
     {
         m_fixed = fixed;
         update();
@@ -223,7 +252,7 @@ void SlideNavigation::setFixed(bool fixed)
 
 void SlideNavigation::setEnableKeyMove(bool enable)
 {
-    if(enable != m_enableKeyMove)
+    if (enable != m_enableKeyMove)
     {
         m_enableKeyMove = enable;
     }
@@ -231,22 +260,22 @@ void SlideNavigation::setEnableKeyMove(bool enable)
 
 void SlideNavigation::moveToPrevious()
 {
-    moveTo(m_currentItemIndex-1);
+    moveTo(m_currentItemIndex - 1);
 }
 
 void SlideNavigation::moveToNext()
 {
-    moveTo(m_currentItemIndex+1);
+    moveTo(m_currentItemIndex + 1);
 }
 
 void SlideNavigation::moveTo(int index)
 {
-    if(index>=0 && index<m_itemList.size() && index!=m_currentItemIndex)
+    if (index >= 0 && index < m_itemList.size() && index != m_currentItemIndex)
     {
         emit itemClicked(index, m_itemList[index].first);
-        if(index == m_currentItemIndex)
+        if (index == m_currentItemIndex)
             return;
-        if(m_currentItemIndex == -1)
+        if (m_currentItemIndex == -1)
             m_startRect = m_itemList[index].second;
         m_forward = index > m_currentItemIndex;
         m_currentItemIndex = index;
@@ -258,12 +287,12 @@ void SlideNavigation::moveTo(int index)
 void SlideNavigation::moveTo(QString str)
 {
     QMap<int, QPair<QString, QRectF> >::iterator it = m_itemList.begin();
-    for(; it!=m_itemList.end(); ++it)
+    for (; it != m_itemList.end(); ++it)
     {
-        if(it.value().first == str)
+        if (it.value().first == str)
         {
             int targetIndex = it.key();
-            if(targetIndex == m_currentItemIndex)
+            if (targetIndex == m_currentItemIndex)
                 return;
             moveTo(targetIndex);
             break;
@@ -274,12 +303,12 @@ void SlideNavigation::moveTo(QString str)
 void SlideNavigation::moveTo(QPointF point)
 {
     QMap<int, QPair<QString, QRectF> >::iterator it = m_itemList.begin();
-    for(; it!=m_itemList.end(); ++it)
+    for (; it != m_itemList.end(); ++it)
     {
-        if(it.value().second.contains(point))
+        if (it.value().second.contains(point))
         {
             int targetIndex = it.key();
-            if(targetIndex == m_currentItemIndex)
+            if (targetIndex == m_currentItemIndex)
                 return;
             moveTo(targetIndex);
             break;
@@ -287,7 +316,7 @@ void SlideNavigation::moveTo(QPointF point)
     }
 }
 
-void SlideNavigation::paintEvent(QPaintEvent *)
+void SlideNavigation::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing);
@@ -298,23 +327,23 @@ void SlideNavigation::paintEvent(QPaintEvent *)
     drawText(&painter);
 }
 
-void SlideNavigation::resizeEvent(QResizeEvent *)
+void SlideNavigation::resizeEvent(QResizeEvent*)
 {
     adjuseItemSize();
 }
 
-void SlideNavigation::mousePressEvent(QMouseEvent *event)
+void SlideNavigation::mousePressEvent(QMouseEvent* event)
 {
     QMap<int, QPair<QString, QRectF> >::iterator it = m_itemList.begin();
-    for(; it!=m_itemList.end(); ++it)
+    for (; it != m_itemList.end(); ++it)
     {
-        if(it.value().second.contains(event->pos()))
+        if (it.value().second.contains(event->pos()))
         {
             qintptr targetIndex = it.key();
             emit itemClicked(targetIndex, it.value().first);
-            if(targetIndex == m_currentItemIndex)
+            if (targetIndex == m_currentItemIndex)
                 return;
-            if(m_currentItemIndex == -1)
+            if (m_currentItemIndex == -1)
             {
                 m_startRect = it.value().second;
             }
@@ -327,9 +356,9 @@ void SlideNavigation::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void SlideNavigation::keyPressEvent(QKeyEvent *event)
+void SlideNavigation::keyPressEvent(QKeyEvent* event)
 {
-    if(!m_enableKeyMove)
+    if (!m_enableKeyMove)
     {
         QWidget::keyPressEvent(event);
         return;
@@ -349,11 +378,11 @@ void SlideNavigation::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void SlideNavigation::drawBarBackground(QPainter *p)
+void SlideNavigation::drawBarBackground(QPainter* p)
 {
     p->save();
     p->setPen(Qt::NoPen);
-    QLinearGradient linerGradient(QPointF(0,0), QPointF(0,height()));
+    QLinearGradient linerGradient(QPointF(0, 0), QPointF(0, height()));
     linerGradient.setColorAt(0.0, m_barStartColor);
     linerGradient.setColorAt(1.0, m_barEndColor);
     p->setBrush(linerGradient);
@@ -361,9 +390,9 @@ void SlideNavigation::drawBarBackground(QPainter *p)
     p->restore();
 }
 
-void SlideNavigation::drawItemBackground(QPainter *p)
+void SlideNavigation::drawItemBackground(QPainter* p)
 {
-    if(m_startRect.isNull())
+    if (m_startRect.isNull())
         return;
     p->save();
     QLinearGradient linerGradient(m_startRect.topLeft(), m_startRect.bottomRight());
@@ -375,16 +404,15 @@ void SlideNavigation::drawItemBackground(QPainter *p)
     p->restore();
 }
 
-void SlideNavigation::drawItemLine(QPainter *p)
+void SlideNavigation::drawItemLine(QPainter* p)
 {
-    if(m_startRect.isNull())
+    if (m_startRect.isNull())
         return;
-    QPointF p1,p2;
-    switch(m_itemLineStyle)
+    QPointF p1, p2;
+    switch (m_itemLineStyle)
     {
     case None:
         return;
-        break;
     case ItemTop:
         p1 = m_startRect.topLeft();
         p2 = m_startRect.topRight();
@@ -407,30 +435,25 @@ void SlideNavigation::drawItemLine(QPainter *p)
         break;
     default:
         return;
-        break;
     }
     p->save();
     QPen linePen;
     linePen.setColor(m_itemLineColor);
     linePen.setWidth(m_itemLineWidth);
     p->setPen(linePen);
-    if(m_itemLineStyle == ItemRect)
-    {
+    if (m_itemLineStyle == ItemRect)
         p->drawRoundedRect(QRectF(p1, p2), m_itemRadious, m_itemRadious);
-    }
     else
-    {
         p->drawLine(p1, p2);
-    }
     p->restore();
 }
 
-void SlideNavigation::drawText(QPainter *p)
+void SlideNavigation::drawText(QPainter* p)
 {
     p->save();
     p->setPen(m_itemTextColor);
-    QMap<int, QPair<QString,QRectF> >::iterator it = m_itemList.begin();
-    while(it != m_itemList.end())
+    QMap<int, QPair<QString, QRectF> >::iterator it = m_itemList.begin();
+    while (it != m_itemList.end())
     {
         QPair<QString, QRectF>& itemData = it.value();
         p->drawText(itemData.second, Qt::AlignCenter, itemData.first);
@@ -441,48 +464,46 @@ void SlideNavigation::drawText(QPainter *p)
 
 void SlideNavigation::adjuseItemSize()
 {
-    if(m_fixed)
-    {//针对固定大小的不对Item的位置进行调整
+    if (m_fixed)
         return;
-    }
     qreal addWidth, addHeight;
-    if(m_orientation == Qt::Horizontal)
+    if (m_orientation == Qt::Horizontal)
     {
-        addWidth = 1.0*(width()-m_totalTextWidth)/m_itemList.size();
-        addHeight = 1.0*(height()-m_totalTextHeight);
+        addWidth = 1.0 * (width() - m_totalTextWidth) / m_itemList.size();
+        addHeight = 1.0 * (height() - m_totalTextHeight);
     }
     else
     {
-        addWidth = 1.0*(width()-m_totalTextWidth);
-        addHeight = 1.0*(height()-m_totalTextHeight)/m_itemList.size();
+        addWidth = 1.0 * (width() - m_totalTextWidth);
+        addHeight = 1.0 * (height() - m_totalTextHeight) / m_itemList.size();
     }
     int itemCount = m_itemList.size();
     qreal dx = 0;
     qreal dy = 0;
     QPointF topLeft, bottomRight;
-    for(int i=0; i<itemCount; ++i)
+    for (int i = 0; i < itemCount; ++i)
     {
         QPair<QString, QRectF>& itemData = m_itemList[i];
         QFont f = font();
         QFontMetrics fm(f);
         int textWidth = fm.horizontalAdvance(itemData.first);
         int textHeight = fm.height();
-        if(m_orientation == Qt::Horizontal)
+        if (m_orientation == Qt::Horizontal)
         {
             topLeft = QPointF(dx, 0);
-            dx += textWidth+m_space+addWidth;
-            dy = m_totalTextHeight+addHeight;
+            dx += textWidth + m_space + addWidth;
+            dy = m_totalTextHeight + addHeight;
         }
         else
         {
             topLeft = QPointF(0, dy);
-            dx = m_totalTextWidth+addWidth;
-            dy += textHeight+m_space+addHeight;
+            dx = m_totalTextWidth + addWidth;
+            dy += textHeight + m_space + addHeight;
         }
         bottomRight = QPointF(dx, dy);
         QRectF textRect(topLeft, bottomRight);
         itemData.second = textRect;
-        if(i == m_currentItemIndex)
+        if (i == m_currentItemIndex)
         {
             m_startRect = textRect;
             m_stopRect = textRect;
@@ -493,216 +514,70 @@ void SlideNavigation::adjuseItemSize()
 
 void SlideNavigation::doSlide()
 {
-    if(m_space <= 0 || m_startRect == m_stopRect)
+    if (m_space <= 0 || m_startRect == m_stopRect)
         return;
-    qreal dx,dy;
-    if(m_orientation == Qt::Horizontal)
+    qreal dx, dy;
+    if (m_orientation == Qt::Horizontal)
     {
-        dx = m_space/2.0;
+        dx = m_space / 2.0;
         dy = 0;
     }
     else
     {
         dx = 0;
-        dy = m_space/2.0;
+        dy = m_space / 2.0;
     }
-    if(m_forward)
+    if (m_forward)
     {
         m_startRect.adjust(dx, dy, dx, dy);
-        if((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() >= m_stopRect.topLeft().x()) ||
-                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() >= m_stopRect.topLeft().y()))
+        if ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() >= m_stopRect.topLeft().x()) ||
+            (m_orientation == Qt::Vertical && m_startRect.topLeft().y() >= m_stopRect.topLeft().y()))
         {
             m_slideTimer->stop();
-            if(m_startRect != m_stopRect)
+            if (m_startRect != m_stopRect)
                 m_shakeTimer->start();
         }
     }
     else
     {
         m_startRect.adjust(-dx, -dy, -dx, -dy);
-        if((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() <= m_stopRect.topLeft().x()) ||
-                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() <= m_stopRect.topLeft().y()))
+        if ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() <= m_stopRect.topLeft().x()) ||
+            (m_orientation == Qt::Vertical && m_startRect.topLeft().y() <= m_stopRect.topLeft().y()))
         {
             m_slideTimer->stop();
-            if(m_startRect != m_stopRect)
+            if (m_startRect != m_stopRect)
                 m_shakeTimer->start();
         }
     }
     update();
-
-//    static qreal stepDx = m_space/2.0;//步进平移
-//    static qreal stepDy = m_space/2.0;
-//    static qreal adjustDx = m_space/2.0;//调整平移
-//    static qreal adjustDy = m_space/2.0;
-//    static int state = 1; //1普通平移,2偏移,3回弹
-//    if(m_orientation == Qt::Horizontal)
-//    {
-//        stepDy = 0;
-//        adjustDy = 0;
-//    }
-//    else
-//    {
-//        stepDx = 0;
-//        adjustDx = 0;
-//    }
-//    if(m_forward)
-//    {
-//        m_startRect.adjust(stepDx, stepDy, stepDx, stepDy);
-//        if(state == 1 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() >= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() >= m_stopRect.topLeft().y())) )
-//        {//偏移
-//            if(m_orientation == Qt::Horizontal)
-//            {
-//                stepDx = 1;
-//            }
-//            else
-//            {
-//                stepDy = 1;
-//            }
-//            m_startRect = m_stopRect;
-//            m_stopRect.adjust(adjustDx, adjustDy, adjustDx, adjustDy);
-//            state = 2;
-//            qDebug() << "开始右偏移" << m_startRect << m_stopRect;
-//        }
-//        if(state == 2 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() >= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() >= m_stopRect.topLeft().y())) )
-//        {//回弹
-//            if(m_orientation == Qt::Horizontal)
-//            {
-//                stepDx = -1;
-//            }
-//            else
-//            {
-//                stepDy = -1;
-//            }
-//            m_startRect = m_stopRect;
-//            m_stopRect.adjust(-adjustDx, adjustDy, -adjustDx, adjustDy);
-//            state = 3;
-//            qDebug() << "开始右回弹" << m_startRect << m_stopRect;
-//        }
-//        if(state == 3 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() <= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() <= m_stopRect.topLeft().y())) )
-//        {//重置变量
-//            stepDx = m_space/2.0;
-//            stepDy = m_space/2.0;
-//            adjustDx = m_space/2.0;
-//            adjustDy = m_space/2.0;
-//            state = 1;
-//            m_slideTimer->stop();
-//            qDebug() << "开始右重置变量";
-//        }
-//    }
-//    else
-//    {
-//        m_startRect.adjust(-stepDx, stepDy, -stepDx, stepDy);
-//        if(state == 1 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() <= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() <= m_stopRect.topLeft().y())) )
-//        {//偏移
-//            if(m_orientation == Qt::Horizontal)
-//            {
-//                stepDx = 1;
-//            }
-//            else
-//            {
-//                stepDy = 1;
-//            }
-//            m_startRect = m_stopRect;
-//            m_stopRect.adjust(-adjustDx, adjustDy, -adjustDx, adjustDy);
-//            state = 2;
-//            qDebug() << "开始左偏移" << m_startRect << m_stopRect;
-//        }
-//        if(state == 2 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() <= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() <= m_stopRect.topLeft().y())) )
-//        {//回弹
-//            if(m_orientation == Qt::Horizontal)
-//            {
-//                stepDx = -1;
-//            }
-//            else
-//            {
-//                stepDy = -1;
-//            }
-//            m_startRect = m_stopRect;
-//            m_stopRect.adjust(adjustDx, adjustDy, adjustDx, adjustDy);
-//            state = 3;
-//            qDebug() << "开始左回弹" << m_startRect << m_stopRect;
-//        }
-//        if(state == 3 &&
-//                ((m_orientation == Qt::Horizontal && m_startRect.topLeft().x() >= m_stopRect.topLeft().x()) ||
-//                (m_orientation == Qt::Vertical && m_startRect.topLeft().y() >= m_stopRect.topLeft().y())) )
-//        {//重置变量
-//            stepDx = m_space/2.0;
-//            stepDy = m_space/2.0;
-//            adjustDx = m_space/2.0;
-//            adjustDy = m_space/2.0;
-//            state = 1;
-//            m_slideTimer->stop();
-//            qDebug() << "开始左重置变量";
-//        }
-//    }
-//    update();
 }
 
 void SlideNavigation::doShake()
 {
     qreal delta = 2.0;
-    qreal dx1,dy1,dx2,dy2;
-    dx1=dy1=dx2=dy2=0.0;
-    if(m_startRect.topLeft().x()>m_stopRect.topLeft().x())
-    {
-        dx1 = -delta;
-    }
-    else if(m_startRect.topLeft().x()<m_stopRect.topLeft().x())
-    {
-        dx1 = delta;
-    }
-    if(m_startRect.topLeft().y()>m_stopRect.topLeft().y())
-    {
-        dy1 = -delta;
-    }
-    else if(m_startRect.topLeft().y()<m_stopRect.topLeft().y())
-    {
-        dy1 = delta;
-    }
-    if(m_startRect.bottomRight().x()>m_stopRect.bottomRight().x())
-    {
-        dx2 = -delta;
-    }
-    else if(m_startRect.bottomRight().x()<m_stopRect.bottomRight().x())
-    {
-        dx2 = delta;
-    }
-    if(m_startRect.bottomRight().y()>m_stopRect.bottomRight().y())
-    {
-        dy2 = -delta;
-    }
-    else if(m_startRect.bottomRight().y()<m_stopRect.bottomRight().y())
-    {
-        dy2 = delta;
-    }
-    m_startRect.adjust(dx1,dy1,dx2,dy2);
-    if(qAbs(m_startRect.topLeft().x()-m_stopRect.topLeft().x()) <= delta)
-    {
+    qreal dx1, dy1, dx2, dy2;
+    dx1 = dy1 = dx2 = dy2 = 0.0;
+    if (m_startRect.topLeft().x() > m_stopRect.topLeft().x()) dx1 = -delta;
+    else if (m_startRect.topLeft().x() < m_stopRect.topLeft().x()) dx1 = delta;
+    if (m_startRect.topLeft().y() > m_stopRect.topLeft().y()) dy1 = -delta;
+    else if (m_startRect.topLeft().y() < m_stopRect.topLeft().y()) dy1 = delta;
+    if (m_startRect.bottomRight().x() > m_stopRect.bottomRight().x()) dx2 = -delta;
+    else if (m_startRect.bottomRight().x() < m_stopRect.bottomRight().x()) dx2 = delta;
+    if (m_startRect.bottomRight().y() > m_stopRect.bottomRight().y()) dy2 = -delta;
+    else if (m_startRect.bottomRight().y() < m_stopRect.bottomRight().y()) dy2 = delta;
+
+    m_startRect.adjust(dx1, dy1, dx2, dy2);
+
+    if (qAbs(m_startRect.topLeft().x() - m_stopRect.topLeft().x()) <= delta)
         m_startRect.setLeft(m_stopRect.topLeft().x());
-    }
-    if(qAbs(m_startRect.topLeft().y()-m_stopRect.topLeft().y()) <= delta)
-    {
+    if (qAbs(m_startRect.topLeft().y() - m_stopRect.topLeft().y()) <= delta)
         m_startRect.setTop(m_stopRect.topLeft().y());
-    }
-    if(qAbs(m_startRect.bottomRight().x()-m_stopRect.bottomRight().x()) <= delta)
-    {
+    if (qAbs(m_startRect.bottomRight().x() - m_stopRect.bottomRight().x()) <= delta)
         m_startRect.setRight(m_stopRect.bottomRight().x());
-    }
-    if(qAbs(m_startRect.bottomRight().y()-m_stopRect.bottomRight().y()) <= delta)
-    {
+    if (qAbs(m_startRect.bottomRight().y() - m_stopRect.bottomRight().y()) <= delta)
         m_startRect.setBottom(m_stopRect.bottomRight().y());
-    }
-    if(m_startRect == m_stopRect)
+
+    if (m_startRect == m_stopRect)
         m_shakeTimer->stop();
     update();
 }

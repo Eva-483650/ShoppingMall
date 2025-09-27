@@ -6,303 +6,824 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
-    <height>450</height>
+    <width>880</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>注册界面</string>
+   <string>注册 - Eva的商城</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
-   <item row="0" column="0">
-    <widget class="QWidget" name="widget" native="true">
-     <property name="cursor">
-      <cursorShape>ArrowCursor</cursorShape>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget#RegisterWgt {
+    /* 建议替换为你自己的背景图 (可用模糊、柔光、淡紫主题图) */
+    background-image: url(:images/login/bg_register_wizard.jpg) 0 0 0 0 stretch stretch;
+    font-family: &quot;微软雅黑&quot;;
+    color:#5a4c74;
+}
+QLabel {
+    font-family:&quot;微软雅黑&quot;;
+}
+QFrame#centralCard {
+    background: rgba(255,255,255,0.78);
+    border: 1.7px solid rgba(226,218,246,0.95);
+    border-radius: 34px;
+}
+#titleLabel {
+    font:700 22pt &quot;微软雅黑&quot;;
+    color:#6c5b7b;
+    letter-spacing:2px;
+}
+.stepDot {
+    min-width:34px;
+    min-height:34px;
+    max-width:34px;
+    max-height:34px;
+    border-radius:17px;
+    background:#d9d0f4;
+    color:#6c5b7b;
+    font: bold 14pt &quot;微软雅黑&quot;;
+    qproperty-alignment: AlignCenter;
+}
+.stepDot[current=&quot;true&quot;] {
+    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #b8a4e6, stop:1 #a18cd1);
+    color:#ffffff;
+}
+.stepLabel {
+    font:10pt &quot;微软雅黑&quot;;
+    color:#7a6995;
+}
+.separatorLine {
+    background:rgba(168,148,205,0.65);
+    min-height:3px;
+    max-height:3px;
+    border-radius:2px;
+}
+QProgressBar#progressSteps {
+    background:#efeafd;
+    border:1px solid #d6c9f7;
+    border-radius:6px;
+    height:10px;
+    text-align:center;
+    font:9pt &quot;微软雅黑&quot;;
+    color:#6c5b7b;
+}
+QProgressBar#progressSteps::chunk {
+    background:qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #c2b6f3, stop:1 #a18cd1);
+    border-radius:5px;
+}
+QLineEdit {
+    font: 12pt &quot;微软雅黑&quot;;
+    color:#55486d;
+    background:#f5f3fa;
+    border:1.4px solid #d6c9f7;
+    border-radius:14px;
+    padding:6px 12px;
+}
+QLineEdit:focus {
+    background:#ffffff;
+    border:2px solid #a18cd1;
+}
+QToolButton {
+    border:none;
+    background:transparent;
+    color:#7e6996;
+    font:12pt &quot;微软雅黑&quot;;
+}
+QToolButton:hover { color:#a18cd1; }
+QComboBox {
+    font: 11pt &quot;微软雅黑&quot;;
+    color:#55486d;
+    background:#f5f3fa;
+    border:1.4px solid #d6c9f7;
+    border-radius:14px;
+    padding:4px 10px;
+}
+QComboBox:focus { border:2px solid #a18cd1; background:#ffffff; }
+QComboBox QAbstractItemView {
+    background:#ffffff;
+    border:1px solid #c2b6f3;
+    selection-background-color:#e8e6fb;
+    selection-color:#5a4c74;
+    outline:0;
+    font:10pt &quot;微软雅黑&quot;;
+}
+QPushButton {
+    font: 13pt &quot;微软雅黑&quot;;
+    font-weight:600;
+    border-radius:18px;
+    padding:8px 22px;
+}
+QPushButton#btn_next {
+    background:qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #b8a4e6, stop:1 #a18cd1);
+    color:#fff;
+    border:none;
+}
+QPushButton#btn_next:hover { background:#a18cd1; }
+QPushButton#btn_back {
+    background:rgba(194,182,243,0.35);
+    color:#6d598c;
+    border:1.4px solid #bdaee8;
+}
+QPushButton#btn_back:hover { background:rgba(194,182,243,0.55); }
+QPushButton#btn_finish {
+    background:qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #c6b4ef, stop:1 #a18cd1);
+    color:#fff;
+    border:none;
+}
+QPushButton#btn_finish:disabled {
+    background:#ccbfe4;
+    color:#f0ecf7;
+}
+QPushButton#btn_finish:hover:!disabled { background:#a18cd1; }
+QLabel#lab_pwdStrengthText {
+    font:10pt &quot;微软雅黑&quot;;
+    color:#7a6599;
+}
+QProgressBar#pwdStrength {
+    background:#efeafd;
+    border:1px solid #d7cdef;
+    border-radius:8px;
+    height:10px;
+    text-align:center;
+    font:8pt &quot;微软雅黑&quot;;
+}
+QProgressBar#pwdStrength::chunk {
+    background:qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #c2b6f3, stop:1 #a18cd1);
+    border-radius:6px;
+}
+QLabel#lab_msg {
+    font:10pt &quot;微软雅黑&quot;;
+    color:#b04545;
+}
+QCheckBox {
+    spacing:6px;
+    font:11pt &quot;微软雅黑&quot;;
+    color:#6a5a84;
+}
+QCheckBox::indicator {
+    width:16px; height:16px;
+    border:1px solid #a18cd1;
+    border-radius:5px;
+    background:#f5f3fa;
+}
+QCheckBox::indicator:checked {
+    background:qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+               stop:0 #c2b6f3, stop:1 #a18cd1);
+}
+#lab_agreement {
+    font:10pt &quot;微软雅黑&quot;;
+    color:#8b78c4;
+}
+#lab_agreement:hover {
+    color:#a18cd1;
+    text-decoration: underline;
+}
+.avatarPreview {
+    border:2px solid #d9cffa;
+    border-radius:14px;
+    background:#f7f5fc;
+}
+.summaryTitle {
+    font:700 14pt &quot;微软雅黑&quot;;
+    color:#6c5b7b;
+}
+.summaryField {
+    font:11pt &quot;微软雅黑&quot;;
+    color:#5a4c74;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="outerLayout">
+   <item>
+    <spacer name="topSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:rgba(241, 255, 110, 80)</string>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+    </spacer>
+   </item>
+   <item>
+    <widget class="QFrame" name="centralCard">
+     <property name="minimumSize">
+      <size>
+       <width>760</width>
+       <height>0</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="cardLayout">
       <property name="leftMargin">
-       <number>70</number>
+       <number>40</number>
+      </property>
+      <property name="topMargin">
+       <number>34</number>
       </property>
       <property name="rightMargin">
-       <number>70</number>
+       <number>40</number>
+      </property>
+      <property name="bottomMargin">
+       <number>30</number>
       </property>
       <item>
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       <layout class="QVBoxLayout" name="layoutHeader">
+        <item>
+         <widget class="QLabel" name="titleLabel">
+          <property name="text">
+           <string>创建新账户</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="stepDotsLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="dot1">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::NoFrame</enum>
+              </property>
+              <property name="text">
+               <string>1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+              <property name="property" stdset="0">
+               <string notr="true"/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_step1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: stepLabel;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;账号&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignHCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QWidget" name="lineSep1" native="true">
+            <property name="styleSheet">
+             <string notr="true">qproperty-class: separatorLine;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="dot2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>2</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_step2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: stepLabel;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>资料</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignHCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QWidget" name="lineSep2" native="true">
+            <property name="styleSheet">
+             <string notr="true">qproperty-class: separatorLine;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="dot3">
+              <property name="styleSheet">
+               <string notr="true">color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>3</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_step3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: stepLabel;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>确认</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignHCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="progressSteps">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="textVisible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QLabel" name="lab_reg">
-        <property name="font">
-         <font>
-          <pointsize>20</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background:transparent;</string>
-        </property>
+       <widget class="QStackedWidget" name="stepsStack">
+        <widget class="QWidget" name="page_account">
+         <layout class="QVBoxLayout" name="layoutAccount">
+          <item>
+           <widget class="QLineEdit" name="line_name">
+            <property name="placeholderText">
+             <string>用户名（必填，3~20字符）</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="line_email">
+            <property name="placeholderText">
+             <string>邮箱（用于找回密码 / 验证）</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="pwdRow1">
+            <item>
+             <widget class="QLineEdit" name="line_password">
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>密码（≥6位，含字母和数字）</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btn_showPwd1">
+              <property name="toolTip">
+               <string>显示/隐藏密码</string>
+              </property>
+              <property name="text">
+               <string>👁</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="pwdRow2">
+            <item>
+             <widget class="QLineEdit" name="line_repassword">
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>确认密码</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="btn_showPwd2">
+              <property name="toolTip">
+               <string>显示/隐藏密码</string>
+              </property>
+              <property name="text">
+               <string>👁</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="pwdStrengthRow">
+            <item>
+             <widget class="QProgressBar" name="pwdStrength">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lab_pwdStrengthText">
+              <property name="text">
+               <string>弱</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_profile">
+         <layout class="QVBoxLayout" name="layoutProfile">
+          <item>
+           <layout class="QHBoxLayout" name="genderRow">
+            <item>
+             <widget class="QComboBox" name="combo_gender">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(109, 89, 140);</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>性别</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>男</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>女</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>保密</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="line_address">
+              <property name="placeholderText">
+               <string>地址（可选）</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="avatarRow">
+            <item>
+             <widget class="QLabel" name="lab_avatarPreview">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>140</width>
+                <height>140</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: avatarPreview;</string>
+              </property>
+              <property name="text">
+               <string>头像</string>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_selectAvatar">
+              <property name="text">
+               <string>选择头像...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="avatarSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>80</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chk_newsletter">
+            <property name="text">
+             <string>订阅新品与活动邮件</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="page_confirm">
+         <layout class="QVBoxLayout" name="layoutConfirm">
+          <item>
+           <widget class="QLabel" name="lab_summaryTitle">
+            <property name="styleSheet">
+             <string notr="true">qproperty-class: summaryTitle;color: rgb(109, 89, 140);</string>
+            </property>
+            <property name="text">
+             <string>请确认以下信息</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="summaryGrid">
+            <item row="0" column="0">
+             <widget class="QLabel" name="lab_summary_user_title">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>用户名：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="lab_summary_user">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="lab_summary_email_title">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>邮箱：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="lab_summary_email">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="lab_summary_gender_title">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>性别：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="lab_summary_gender">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="lab_summary_address_title">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>地址：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="lab_summary_address">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="lab_summary_newsletter_title">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>订阅邮件：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="lab_summary_newsletter">
+              <property name="styleSheet">
+               <string notr="true">qproperty-class: summaryField;color: rgb(109, 89, 140);</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="agreementRow">
+            <item>
+             <widget class="QCheckBox" name="chk_agree">
+              <property name="text">
+               <string>我已阅读并同意</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lab_agreement">
+              <property name="text">
+               <string>&lt;a&gt;《用户协议》&lt;/a&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="agreeSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lab_msg">
         <property name="text">
-         <string>注册</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="line_name">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-radius:7px;
-border-width:0.5px;
-border:0.5px solid white;
-</string>
-        </property>
-        <property name="placeholderText">
-         <string>请输入您的用户名</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="line_password">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-radius:7px;
-border-width:0.5px;
-border:0.5px solid white;</string>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>请输入您的密码</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="line_repassword">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-radius:7px;
-border-width:0.5px;
-border:0.5px solid white;</string>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>请再次输入您的密码</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="line_add">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-radius:7px;
-border-width:0.5px;
-border:0.5px solid white;</string>
-        </property>
-        <property name="placeholderText">
-         <string>请输入您的地址</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="combox_render">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Adobe 黑体 Std R</family>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="whatsThis">
-         <string>请选择您的性别</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox{
-  color:#1e222b;
-  padding: 1px 15px 1px 3px;
-  border:1px solid rgba(228,228,228,1);
-  border-radius:8;
-  font-size: 14px;
-	font: 10pt &quot;Adobe 黑体 Std R&quot;;
-}
-QComboBox::drop-down {			/*下拉按钮*/
-      subcontrol-origin: padding;
-      subcontrol-position: top right;
-      width: 20px;
-      border:none;
-}
-
-QComboBox QAbstractItemView{	/*列表 */
-	margin-top: 8px;
-	margin-left: 6px;
-	margin-bottom: 6px;
-	margin-right: 6px;
-	background:rgba(255,255,255,1);
-    border:1px solid rgba(228,228,228,1);
-    border-radius:8px;
-	font-size:12px;
-    outline: 0px;
-    color:#1e222b;
-    padding-left: 16px;
-    padding-top: 12px;
-	padding-bottom:12px;
-    
-  }
-
-QComboBox QScrollBar::vertical{ /*滑条 主体部分*/
-    width:6px;
-    background:rgb(255,255,255);
-    border:none;
-}
-QComboBox QScrollBar::handle::vertical{ /*滑块主体*/
-    border-radius:3px;
-    background-color: rgba(30, 34, 43, 0.2);
-}
-QComboBox QScrollBar::handle::vertical::hover{
-    background-color: rgba(30, 34, 43, 0.2);
-}
-QComboBox QScrollBar::add-line::vertical{/*上箭头*/
-    border:none;
-}
-QComboBox QScrollBar::sub-line::vertical{/*下箭头*/
-    border:none;
-}
-</string>
-        </property>
+       <layout class="QHBoxLayout" name="navButtonsLayout">
         <item>
-         <property name="text">
-          <string>不方便透露</string>
-         </property>
+         <widget class="QPushButton" name="btn_back">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>上一步</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>男</string>
-         </property>
+         <spacer name="midNavSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
-         <property name="text">
-          <string>女</string>
-         </property>
+         <widget class="QPushButton" name="btn_next">
+          <property name="text">
+           <string>下一步</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>EVA</string>
-         </property>
+         <widget class="QPushButton" name="btn_register">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>完成注册</string>
+          </property>
+         </widget>
         </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_register">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background:rgb(255, 170, 127);
-color:white;
-border-radius:7px;
-font: 12pt &quot;Adobe 黑体 Std R&quot;;</string>
-        </property>
-        <property name="text">
-         <string>注册</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       </layout>
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <spacer name="bottomSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

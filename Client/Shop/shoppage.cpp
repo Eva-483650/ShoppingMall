@@ -1,19 +1,57 @@
 #include "shoppage.h"
 #include "ui_shoppage.h"
-#include <QRegularExpression>
 
-ShopPage::ShopPage(QWidget *parent) :
+#include <QRegularExpression>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QMessageBox>
+#include <QMenu>
+#include <QAction>
+#include <QCursor>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDebug>
+
+/*
+ * 统一命名：全部使用 Product_xxx JSON 字段：
+ * Product_id / Product_name / Product_price / Product_amount / Product_sales
+ * Product_classification / Product_about / Product_istimelimited / Product_pictureaddress
+ */
+
+namespace {
+    constexpr const char* FIELD_ID = "Product_id";
+    constexpr const char* FIELD_NAME = "Product_name";
+    constexpr const char* FIELD_PRICE = "Product_price";
+    constexpr const char* FIELD_AMOUNT = "Product_amount";
+    constexpr const char* FIELD_SALES = "Product_sales";
+    constexpr const char* FIELD_CLASSIFICATION = "Product_classification";
+    constexpr const char* FIELD_ABOUT = "Product_about";
+} // namespace
+
+/*
+ * ShopPage 负责：
+ * 1. 初始化商品分类（首次 showEvent）
+ * 2. 分类 → QStackedWidget 多页
+ * 3. 双击 / 搜索弹出 ProductPage
+ * 4. 右键刷新当前分类
+ */
+
+ShopPage::ShopPage(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::ShopPage)
 {
     ui->setupUi(this);
     isCached = false;
+
     m_stackedwidget = new QStackedWidget();
     ui->horizontalLayout->addWidget(m_stackedwidget);
 
-    connect(ui->list_classification,SIGNAL(currentRowChanged(int)),this,SLOT(updateOneClass(int)));
-    connect(this,SIGNAL(signal_refresh(int)),this,SLOT(updateOneClass(int)));
-    connect(ui->btn_search,SIGNAL(clicked()),this,SLOT(searchProduct()));
+    connect(ui->list_classification, &QListWidget::currentRowChanged,
+        this, &ShopPage::updateOneClass);
+    connect(this, &ShopPage::signal_refresh,
+        this, &ShopPage::updateOneClass);
+    connect(ui->btn_search, &QPushButton::clicked,
+        this, &ShopPage::searchProduct);
 }
 
 ShopPage::~ShopPage()
@@ -21,141 +59,225 @@ ShopPage::~ShopPage()
     delete ui;
 }
 
-void ShopPage::showEvent(QShowEvent *event){
-    if(!isCached){
-    initClassification();
-    isCached = true;
-    }
-    return QWidget::showEvent(event);
-}
-
-void ShopPage::initClassification(){
-    if(client){
-        QString FLAG_INSKIND = "02";//商品操作属于02类
-        QString FLAG_INS = "04";//执行的是查询操作
-        QJsonObject obj;
-        obj.insert("want",QJsonValue(QString("pro_classification")));
-        obj.insert("isDistinct",QJsonValue(QString("true")));
-        QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER+FLAG_INSKIND+FLAG_INS,obj);
-        QString flag = client->parseHead(data);
-        if(flag[0] != "1"){client->error(flag[0],flag.mid(1));return;}
-        QJsonArray result = client->parseResponse(data);
-        if(!result.isEmpty()){
-            for(int i = 0; i< result.size(); i++){
-                QString str = result.at(i).toObject().value("pro_classification").toString();
-                QListWidgetItem *p = new QListWidgetItem(str);
-                ui->list_classification->addItem(p);
-                QListWidget *tmp = new QListWidget();
-                m_stackedwidget->addWidget(tmp);
-            }
-            //qDebug()<<"result:"<<result.size();
-            stack_isCached.push_back(false);
-            stack_isCached.resize(result.size());
-            stack_isCached.fill(false);
-            ui->list_classification->setCurrentRow(0);//一开始展示第一页
-        }
-
-    }
-    else{
-        QMessageBox::warning(nullptr,tr("错误"),tr("客户端有误！"));
-    }
-}
-
-void ShopPage::updateOneClass(int currow){
-    if(client && !stack_isCached.at(currow)){
-        QString FLAG_INSKIND = "02";//商品操作属于02类
-        QString FLAG_INS = "04";//执行的是查询操作
-        QJsonObject obj;
-        QString wantclass = ui->list_classification->item(currow)->text();
-        obj.insert("want",QJsonValue(QString("*")));
-        obj.insert("isDistinct",QJsonValue(QString("false")));
-        obj.insert("restriction",QJsonValue(QString("pro_classification='%1'").arg(wantclass)));
-        QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER+FLAG_INSKIND+FLAG_INS,obj);
-        QString flag = client->parseHead(data);
-        if(flag[0] != "1"){client->error(flag[0],flag.mid(1));return;}
-        QJsonArray result = client->parseResponse(data);
-        QListWidget *newList = new QListWidget();
-        newList->setStyleSheet("QListWidget{border:1px;background:#EEE;border-radius:5px;}"//设置ui列表的样式表
-                               "QListWidget::Item{ background:white;height:80px;}"
-                               "QListWidget::Item:hover{background:rgb(246,246,247);}"
-                               );
-        if(!result.isEmpty()){
-            for(int i = 0;i < result.size();i++){
-                QJsonObject p = result[i].toObject();
-                Product *newproduct = new Product(p);//生成新的产品对象
-                if(productlist.contains(newproduct->id)){free(productlist.value(newproduct->id));}
-                productlist.insert(newproduct->id,newproduct);
-                //加入ui列表
-                QListWidgetItem * newWidget = new QListWidgetItem(newList);
-                ProductItem * addNew = new ProductItem();
-                connect(addNew,SIGNAL(signal_proitem_dblclick(int)),this,SLOT(showProduct(int)));
-                addNew->setLabNumColor(false);  //设置红色
-                addNew->setLabNumText("$"+p.value("pro_price").toString());
-                addNew->setLabNameText(p.value("pro_name").toString());
-                addNew->setLabMessageText(p.value("pro_about").toString());
-                addNew->setLabrankingText("销量:"+p.value("pro_sales").toString());
-                addNew->setId(p.value("pro_id").toString());
-                newList->setItemWidget(newWidget,addNew);
-            }
-        }
-        QWidget *tmp = m_stackedwidget->widget(currow);
-        m_stackedwidget->removeWidget(tmp);
-        m_stackedwidget->insertWidget(currow,newList);//添加新的类别页
-        m_stackedwidget->setCurrentIndex(currow);
-        qDebug()<<"updateoneclass!"<<wantclass<<currow;
-        stack_isCached[currow] = true;
-
-    }
-    else if(client && stack_isCached.at(currow)){
-        m_stackedwidget->setCurrentIndex(currow);
-    }
-    else{
-        QMessageBox::warning(nullptr,tr("错误"),tr("客户端有误！"));
-    }
-}
-
-void ShopPage::showProduct(int id){
-    Product *p = productlist.value(id);
-    ProductPage *page = new ProductPage(p);
-    connect(page,SIGNAL(signal_addToCart(Product*)),this,SLOT(addToCart(Product*)));
-    page->show();
-    return;
-}
-
-void ShopPage::addToCart(Product *Product){
-    emit signal_addToCart(Product);
-}
-
-void ShopPage::contextMenuEvent(QContextMenuEvent *event)
+void ShopPage::showEvent(QShowEvent* event)
 {
-        QAction *actionshuffle = new QAction(tr("刷新"),this);
-        this->addAction(actionshuffle);
-        QMenu contextMenu;
-        contextMenu.addAction(actionshuffle);
-        QAction *selectedAction = contextMenu.exec(QCursor::pos());
-        if(selectedAction == actionshuffle){
-            int _curindex = m_stackedwidget->currentIndex();
-            stack_isCached[_curindex] = false;
-            //qDebug()<<productlist;
-            emit signal_refresh(_curindex);
-        }
+    if (!isCached) {
+        initClassification();
+        isCached = true;
+    }
+    QWidget::showEvent(event);
 }
 
-void ShopPage::searchProduct(){
-    QString context = ui->lineEdit->text();
-    if(context.trimmed() == ""){
+/*
+ * 拉取所有商品分类（distinct Product_classification）
+ */
+void ShopPage::initClassification()
+{
+    if (!client) {
+        QMessageBox::warning(nullptr, tr("错误"), tr("客户端有误！"));
         return;
     }
-    bool flag = false;
-    QRegularExpression exp(QString("\\w*%1\\w*").arg(context), QRegularExpression::CaseInsensitiveOption);
-    for(int i = 0;i < productlist.keys().size(); i++){
-        Product *p = productlist.value(productlist.keys().at(i));
-        if(exp.match(p->name).hasMatch()){
-            ProductPage *page = new ProductPage(p);
-            connect(page,SIGNAL(signal_addToCart(Product*)),this,SLOT(addToCart(Product*)));
-            page->show();
-            flag = true;
+
+    const QString FLAG_INSKIND = "02";
+    const QString FLAG_INS = "04";
+
+    QJsonObject obj;
+    obj.insert("want", QJsonValue(QString(FIELD_CLASSIFICATION)));
+    obj.insert("isDistinct", QJsonValue(QString("true")));
+
+    QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER + FLAG_INSKIND + FLAG_INS, obj);
+    QString flag = client->parseHead(data);
+    if (flag[0] != '1') {
+        client->error(flag[0], flag.mid(1));
+        return;
+    }
+
+    QJsonArray result = client->parseResponse(data);
+    if (!result.isEmpty()) {
+        ui->list_classification->clear();
+        for (int i = 0; i < m_stackedwidget->count(); ++i) {
+            QWidget* w = m_stackedwidget->widget(i);
+            m_stackedwidget->removeWidget(w);
+            w->deleteLater();
+        }
+
+        for (int i = 0; i < result.size(); ++i) {
+            const QString str = result.at(i).toObject().value(FIELD_CLASSIFICATION).toString();
+            ui->list_classification->addItem(new QListWidgetItem(str));
+            m_stackedwidget->addWidget(new QListWidget());
+        }
+
+        stack_isCached.clear();
+        stack_isCached.resize(result.size());
+        stack_isCached.fill(false);
+
+        ui->list_classification->setCurrentRow(0);
+    }
+}
+
+/*
+ * 加载指定分类（未缓存则请求服务器）
+ */
+void ShopPage::updateOneClass(int currow)
+{
+    if (currow < 0 || currow >= stack_isCached.size())
+        return;
+
+    if (!client) {
+        QMessageBox::warning(nullptr, tr("错误"), tr("客户端有误！"));
+        return;
+    }
+
+    if (stack_isCached.at(currow)) {
+        m_stackedwidget->setCurrentIndex(currow);
+        return;
+    }
+
+    QListWidgetItem* catItem = ui->list_classification->item(currow);
+    if (!catItem)
+        return;
+
+    const QString wantclass = catItem->text();
+
+    const QString FLAG_INSKIND = "02";
+    const QString FLAG_INS = "04";
+
+    QJsonObject obj;
+    obj.insert("want", QJsonValue(QString("*")));
+    obj.insert("isDistinct", QJsonValue(QString("false")));
+    obj.insert("restriction",
+        QJsonValue(QString("%1='%2'").arg(FIELD_CLASSIFICATION, wantclass)));
+
+    QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER + FLAG_INSKIND + FLAG_INS, obj);
+    QString flag = client->parseHead(data);
+    if (flag[0] != '1') {
+        client->error(flag[0], flag.mid(1));
+        return;
+    }
+
+    QJsonArray result = client->parseResponse(data);
+
+    QListWidget* newList = new QListWidget();
+    newList->setStyleSheet(
+        "QListWidget{border:1px;background:#EEE;border-radius:5px;}"
+        "QListWidget::Item{ background:white;height:80px;}"
+        "QListWidget::Item:hover{background:rgb(246,246,247);}"
+    );
+    newList->setUniformItemSizes(true);
+    newList->setSelectionMode(QAbstractItemView::NoSelection);
+
+    if (!result.isEmpty()) {
+        for (int i = 0; i < result.size(); ++i) {
+            QJsonObject objItem = result[i].toObject();
+            Product* newproduct = new Product(objItem);
+
+            if (productlist.contains(newproduct->id)) {
+                delete productlist.value(newproduct->id);
+            }
+            productlist.insert(newproduct->id, newproduct);
+
+            auto* listItem = new QListWidgetItem(newList);
+            auto* widget = new ProductItem();
+            connect(widget, &ProductItem::signal_proitem_dblclick,
+                this, &ShopPage::showProduct);
+
+            widget->setLabNumColor(false);
+            widget->setLabNumText("$" + objItem.value(FIELD_PRICE).toString());
+            widget->setLabNameText(objItem.value(FIELD_NAME).toString());
+            widget->setLabMessageText(objItem.value(FIELD_ABOUT).toString());
+            widget->setLabrankingText("销量:" + objItem.value(FIELD_SALES).toString());
+            widget->setId(objItem.value(FIELD_ID).toString());
+
+            newList->setItemWidget(listItem, widget);
         }
     }
-    if(!flag)QMessageBox::information(nullptr,tr("提示"),tr("未找到相应商品！"));
+
+    if (QWidget* old = m_stackedwidget->widget(currow)) {
+        m_stackedwidget->removeWidget(old);
+        old->deleteLater();
+    }
+    m_stackedwidget->insertWidget(currow, newList);
+    m_stackedwidget->setCurrentIndex(currow);
+
+    stack_isCached[currow] = true;
+
+    qDebug() << "updateOneClass finished:" << wantclass << currow;
+}
+
+/*
+ * 打开商品详情
+ */
+void ShopPage::showProduct(int id)
+{
+    Product* p = productlist.value(id, nullptr);
+    if (!p) {
+        QMessageBox::warning(this, tr("错误"), tr("商品不存在或已被刷新移除"));
+        return;
+    }
+    ProductPage* page = new ProductPage(p);
+    connect(page, &ProductPage::signal_addToCart,
+        this, &ShopPage::addToCart);
+    page->show();
+}
+
+/*
+ * 转发到外界
+ */
+void ShopPage::addToCart(Product* product)
+{
+    if (!product) return;
+    emit signal_addToCart(product);
+}
+
+/*
+ * 右键刷新当前分类
+ */
+void ShopPage::contextMenuEvent(QContextMenuEvent* event)
+{
+    Q_UNUSED(event);
+    QAction* actionRefresh = new QAction(tr("刷新"), this);
+    QMenu menu;
+    menu.addAction(actionRefresh);
+    QAction* selected = menu.exec(QCursor::pos());
+    if (selected == actionRefresh) {
+        int idx = m_stackedwidget->currentIndex();
+        if (idx >= 0 && idx < stack_isCached.size()) {
+            stack_isCached[idx] = false;
+            emit signal_refresh(idx);
+        }
+    }
+}
+
+
+void ShopPage::searchProduct()
+{
+	const QString key = ui->lineEdit->text().trimmed();
+	if (key.isEmpty()) return;
+
+	Product* found = nullptr;
+	for (auto it = productlist.cbegin(); it != productlist.cend(); ++it) {
+		Product* p = it.value();
+		if (p && p->name.contains(key, Qt::CaseInsensitive)) { found = p; break; }
+	}
+
+	if (!found) {
+		QMessageBox::information(this, tr("提示"), tr("未找到相关商品"));
+		return;
+	}
+
+	if (m_activeProductPage) {
+		if (m_activeProductPage->productId() == found->id) {
+			m_activeProductPage->raise();
+			m_activeProductPage->activateWindow();
+			return;
+		}
+		m_activeProductPage->close();
+		m_activeProductPage = nullptr;
+	}
+
+	m_activeProductPage = ProductPage::simpleCenter(found, this);
+	connect(m_activeProductPage, &ProductPage::signal_addToCart,
+		this, &ShopPage::addToCart);
+	connect(m_activeProductPage, &QObject::destroyed,
+		this, [this] { m_activeProductPage = nullptr; });
 }

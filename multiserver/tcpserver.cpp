@@ -17,7 +17,7 @@ void TcpServer::incomingConnection(qintptr sockDesc)
     qDebug()<<QString("新的连接：端口%1").arg(sockDesc);
     m_socketList.append(sockDesc);//放入新的端口号
 
-    TcpServerThread *thread = new TcpServerThread(sockDesc);
+    TcpServerThread *thread = new TcpServerThread(sockDesc);//创建线程对象
     threadlist.append(thread);//把新的thread放入threadlist
 
     emit signal_newConnection(sockDesc);//告诉dialog有新的连接

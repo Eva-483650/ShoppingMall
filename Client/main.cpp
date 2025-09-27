@@ -1,5 +1,6 @@
 #include "shoppingclient.h"
-#include"loginwgt.h"
+#include "loginwgt.h"
+
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
@@ -8,9 +9,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QDir::setCurrent(qApp->applicationDirPath());
-    // ´´½¨Ö÷´°¿Ú(ShoppingClient)
+    // åˆ›å»ºä¸»çª—å£(ShoppingClient)
     ShoppingClient w; 
-    // ´´½¨²¢ÏÔÊ¾µÇÂ¼´°¿Ú(LoginWgt)
+    // åˆ›å»ºå¹¶æ˜¾ç¤ºç™»å½•çª—å£(LoginWgt)
     LoginWgt q(&w); 
     q.show();
     return a.exec();

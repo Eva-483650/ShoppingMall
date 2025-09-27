@@ -6,65 +6,211 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>445</width>
-    <height>394</height>
+    <width>1180</width>
+    <height>760</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>首页 - Eva的商城</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <property name="styleSheet">
+   <string notr="true">
+QWidget#HomePage {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                 stop:0 #f4efff, stop:0.35 #ebe2fb,
+                 stop:0.7 #e2d6f7, stop:1 #d6c6f0);
+    font-family:&quot;微软雅黑&quot;;
+    color:#594b74;
+}
+
+/* 标题文字通用 */
+.titleLabel {
+    font: 700 26px &quot;微软雅黑&quot;;
+    color:#6c5b8f;
+    letter-spacing:2px;
+}
+
+/* 模块标题 */
+.sectionTitle {
+    font: 600 18px &quot;微软雅黑&quot;;
+    color:#6a5a8e;
+    border-left:5px solid qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,
+                 stop:0 #b9a8e8, stop:1 #9d84d8);
+    padding-left:10px;
+    margin:6px 0;
+}
+
+/* 顶部栏 */
+QFrame#topBar {
+    background: rgba(255,255,255,0.65);
+    border:1px solid rgba(200,188,231,0.8);
+    border-radius:22px;
+}
+
+/* 轮播卡片半透明 + 阴影可在代码里加 */
+QFrame#carouselFrame {
+    background: rgba(255,255,255,0.55);
+    border:1px solid rgba(210,198,240,0.9);
+    border-radius:28px;
+}
+
+/* 推荐、公告卡片 */
+QFrame.roundCard {
+    background: rgba(255,255,255,0.60);
+    border:1px solid rgba(210,198,240,0.9);
+    border-radius:22px;
+}
+
+QListWidget, QTextBrowser {
+    background:transparent;
+    border:none;
+    font: 11pt &quot;微软雅黑&quot;;
+    color:#5a4c74;
+}
+
+/* 分类快捷按钮 */
+QToolButton.categoryBtn {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:1,
+                stop:0 #cdbaf3, stop:1 #b19add);
+    color:#fff;
+    border:none;
+    border-radius:18px;
+    font:600 12pt &quot;微软雅黑&quot;;
+    padding:10px 18px;
+}
+QToolButton.categoryBtn:hover {
+    background:#b49fdd;
+}
+QToolButton.categoryBtn:pressed {
+    background:#a488d1;
+}
+
+/* 轮播左右按钮 */
+QToolButton#btn_prev, QToolButton#btn_next {
+    background: rgba(120,100,160,0.25);
+    color:#fff;
+    font: bold 20px &quot;微软雅黑&quot;;
+    border:none;
+    border-radius:18px;
+    min-width:36px;
+    min-height:36px;
+}
+QToolButton#btn_prev:hover, QToolButton#btn_next:hover {
+    background: rgba(120,100,160,0.45);
+}
+QToolButton#btn_prev:pressed, QToolButton#btn_next:pressed {
+    background: rgba(120,100,160,0.65);
+}
+
+/* 轮播指示点 */
+QLabel.indicatorDot {
+    min-width:14px;
+    min-height:14px;
+    max-width:14px;
+    max-height:14px;
+    border-radius:7px;
+    background:#d3c4ee;
+}
+QLabel.indicatorDot[current=&quot;true&quot;] {
+    background:qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:1,
+               stop:0 #bba6eb, stop:1 #9b83d5);
+}
+
+/* 精选推荐流式容器里的子卡片（代码里生成） */
+QFrame.productCard {
+    background: rgba(255,255,255,0.72);
+    border:1px solid rgba(205,192,235,0.9);
+    border-radius:16px;
+}
+QLabel.productName {
+    font: 12pt &quot;微软雅黑&quot;;
+    color:#5d4f79;
+    font-weight:600;
+}
+QLabel.productPrice {
+    font: 11pt &quot;微软雅黑&quot;;
+    color:#9a5a9d;
+    font-weight:500;
+}
+
+/* 滚动条淡紫 */
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin:4px;
+}
+QScrollBar::handle:vertical {
+    background: #c7b4ea;
+    border-radius:5px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #b49fdd;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height:0;
+}
+
+/* 去除额外虚边 */
+QWidget#HomePage QFrame, QStackedWidget {
+    /* 保持透明背景由父级控制 */
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="rootLayout">
+   <property name="leftMargin">
+    <number>26</number>
+   </property>
+   <property name="topMargin">
+    <number>18</number>
+   </property>
+   <property name="rightMargin">
+    <number>26</number>
+   </property>
+   <property name="bottomMargin">
+    <number>18</number>
+   </property>
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>50</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>60</height>
-      </size>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="topMargin">
-       <number>0</number>
+    <widget class="QFrame" name="topBar">
+     <layout class="QHBoxLayout" name="topBarLayout">
+      <property name="leftMargin">
+       <number>22</number>
+      </property>
+      <property name="rightMargin">
+       <number>22</number>
       </property>
       <item>
        <widget class="QLabel" name="lab_title">
-        <property name="font">
-         <font>
-          <family>Adobe 繁黑體 Std B</family>
-          <pointsize>-1</pointsize>
-          <weight>7</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
         <property name="styleSheet">
-         <string notr="true">border:1px dotted;
-border-radius:10px;
-
-background-color:qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 0, 0, 0), stop:0.52 rgba(0, 0, 0, 0), stop:0.565 rgba(82, 121, 76, 33), stop:0.65 rgba(159, 235, 148, 64), stop:0.721925 rgba(255, 238, 150, 129), stop:0.77 rgba(255, 128, 128, 204), stop:0.89 rgba(191, 128, 255, 64), stop:1 rgba(0, 0, 0, 0));
-
-font: 63 27px &quot;Adobe 繁黑體 Std B&quot;;</string>
+         <string notr="true">qproperty-class: titleLabel;font: 12pt &quot;微软雅黑&quot;; color:#7a6a95;</string>
         </property>
         <property name="text">
-         <string>潮海波の商店</string>
+         <string>Eva的商城</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
-        <property name="margin">
-         <number>5</number>
+       </widget>
+      </item>
+      <item>
+       <spacer name="titleSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="lab_subTitle">
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;微软雅黑&quot;; color:#7a6a95;</string>
+        </property>
+        <property name="text">
+         <string>「 精选 · 潮流 · 轻奢 · 生活美学 」</string>
         </property>
        </widget>
       </item>
@@ -72,10 +218,350 @@ font: 63 27px &quot;Adobe 繁黑體 Std B&quot;;</string>
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="lunboLayout"/>
+    <layout class="QHBoxLayout" name="midMainLayout">
+     <property name="spacing">
+      <number>24</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="carouselFrame">
+       <property name="minimumSize">
+        <size>
+         <width>650</width>
+         <height>340</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="carouselLayout">
+        <property name="leftMargin">
+         <number>20</number>
+        </property>
+        <property name="topMargin">
+         <number>18</number>
+        </property>
+        <property name="rightMargin">
+         <number>20</number>
+        </property>
+        <property name="bottomMargin">
+         <number>16</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stack_carousel">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="carouselPage1">
+           <layout class="QVBoxLayout" name="carouselPage1Layout"/>
+          </widget>
+          <widget class="QWidget" name="carouselPage2">
+           <layout class="QVBoxLayout" name="carouselPage2Layout"/>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="carouselControlLayout">
+          <item>
+           <widget class="QToolButton" name="btn_prev">
+            <property name="text">
+             <string>‹</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="ctlSpacerL">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QWidget" name="indicatorContainer" native="true">
+            <layout class="QHBoxLayout" name="indicatorLayout">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="dot_0">
+               <property name="styleSheet">
+                <string notr="true">qproperty-class: indicatorDot;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="dot_1">
+               <property name="styleSheet">
+                <string notr="true">qproperty-class: indicatorDot;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="dot_2">
+               <property name="styleSheet">
+                <string notr="true">qproperty-class: indicatorDot;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="ctlSpacerR">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btn_next">
+            <property name="text">
+             <string>›</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="rightColLayout">
+       <property name="spacing">
+        <number>20</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_recommend">
+         <property name="minimumSize">
+          <size>
+           <width>420</width>
+           <height>210</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">qproperty-class: roundCard;</string>
+         </property>
+         <layout class="QVBoxLayout" name="recommendLayout">
+          <property name="leftMargin">
+           <number>18</number>
+          </property>
+          <property name="topMargin">
+           <number>14</number>
+          </property>
+          <property name="rightMargin">
+           <number>18</number>
+          </property>
+          <property name="bottomMargin">
+           <number>14</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lab_recommendTitle">
+            <property name="styleSheet">
+             <string notr="true">qproperty-class: sectionTitle;color:#7a6a95;</string>
+            </property>
+            <property name="text">
+             <string>精选推荐</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QScrollArea" name="scroll_recommend">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>320</height>
+             </size>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>412</width>
+               <height>301</height>
+              </rect>
+             </property>
+             <layout class="QHBoxLayout" name="recommendFlowLayout">
+              <property name="spacing">
+               <number>10</number>
+              </property>
+              <property name="sizeConstraint">
+               <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="recSpacer">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Policy::Minimum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>80</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_notice">
+         <property name="minimumSize">
+          <size>
+           <width>420</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">qproperty-class: roundCard;</string>
+         </property>
+         <layout class="QVBoxLayout" name="noticeLayout">
+          <property name="leftMargin">
+           <number>18</number>
+          </property>
+          <property name="topMargin">
+           <number>14</number>
+          </property>
+          <property name="rightMargin">
+           <number>18</number>
+          </property>
+          <property name="bottomMargin">
+           <number>14</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lab_noticeTitle">
+            <property name="styleSheet">
+             <string notr="true">qproperty-class: sectionTitle;color:#7a6a95;</string>
+            </property>
+            <property name="text">
+             <string>公告 &amp; 活动</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="list_announcements">
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QWidget" name="widget_3" native="true"/>
+    <layout class="QHBoxLayout" name="categoryLayout">
+     <property name="spacing">
+      <number>18</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="btn_cat_new">
+       <property name="styleSheet">
+        <string notr="true">qproperty-class: categoryBtn;</string>
+       </property>
+       <property name="text">
+        <string>新品速递</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="btn_cat_hot">
+       <property name="styleSheet">
+        <string notr="true">qproperty-class: categoryBtn;</string>
+       </property>
+       <property name="text">
+        <string>人气热卖</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="btn_cat_lux">
+       <property name="styleSheet">
+        <string notr="true">qproperty-class: categoryBtn;</string>
+       </property>
+       <property name="text">
+        <string>轻奢专栏</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="btn_cat_daily">
+       <property name="styleSheet">
+        <string notr="true">qproperty-class: categoryBtn;</string>
+       </property>
+       <property name="text">
+        <string>生活精选</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="catSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

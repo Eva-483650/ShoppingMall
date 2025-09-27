@@ -6,21 +6,52 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>607</height>
+    <width>960</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>潮海波の商店</string>
+   <string>Eva的商城</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget#ShoppingClient {
+    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
+                stop:0 #e8e6fb, stop:0.6 #d6c9f7, stop:1 #b8a4e6);
+    font-family:"微软雅黑";
+}
+/* PageStack 透明，防止叠加底部灰层 */
+QStackedWidget {
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+   </string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>12</number>
+   </property>
+   <property name="topMargin">
+    <number>12</number>
+   </property>
+   <property name="rightMargin">
+    <number>12</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>0</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>4</number>
+   </property>
    <item row="0" column="0">
     <widget class="QStackedWidget" name="PageStack">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="HomePage" name="HomeP"/>
      <widget class="ShopPage" name="ShopP"/>
@@ -31,53 +62,63 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="SlideNavigation" name="BottomNav" native="true"/>
+    <widget class="SlideNavigation" name="BottomNav" native="true">
+     <property name="styleSheet">
+      <string notr="true">
+/* 这里保持透明；真实玻璃效果由 C++ paintEvent 绘制 */
+QWidget#BottomNav { background: transparent; }
+      </string>
+     </property>
+     <property name="minimumHeight">
+      <number>72</number>
+     </property>
+    </widget>
    </item>
   </layout>
-  <zorder>BottomNav</zorder>
   <zorder>PageStack</zorder>
+  <zorder>BottomNav</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>SlideNavigation</class>
    <extends>QWidget</extends>
-   <header location="global">slidenavigation.h</header>
+   <header>slidenavigation.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>HomePage</class>
    <extends>QWidget</extends>
-   <header location="global">./Home/homepage.h</header>
+   <header>./Home/homepage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ShopPage</class>
    <extends>QWidget</extends>
-   <header location="global">./Shop/shoppage.h</header>
+   <header>./Shop/shoppage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ContactPage</class>
    <extends>QWidget</extends>
-   <header location="global">./Contact/contactpage.h</header>
+   <header>./Contact/contactpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>CartPage</class>
    <extends>QWidget</extends>
-   <header location="global">./Cart/cartpage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>MePage</class>
-   <extends>QWidget</extends>
-   <header location="global">./Me/mepage.h</header>
+   <header>./Cart/cartpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>OrderPage</class>
    <extends>QWidget</extends>
-   <header location="global">./Order/orderpage.h</header>
+   <header>./Order/orderpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MePage</class>
+   <extends>QWidget</extends>
+   <header>./Me/mepage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
