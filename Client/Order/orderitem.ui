@@ -6,20 +6,64 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>692</width>
-    <height>90</height>
+    <width>694</width>
+    <height>110</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>110</height>
+   </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>90</height>
+    <height>110</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(255, 255, 255, 240),
+                stop:0.5 rgba(252, 250, 255, 240),
+                stop:1 rgba(250, 248, 254, 240));
+    border: 1px solid rgba(189, 170, 233, 25);
+    border-radius: 12px;
+    font-family: "Microsoft YaHei";
+    margin: 2px;
+}
+
+QWidget:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(240, 235, 250, 250),
+                stop:0.5 rgba(235, 230, 248, 250),
+                stop:1 rgba(232, 227, 245, 250));
+    border: 1px solid rgba(189, 170, 233, 60);
+    box-shadow: 0px 4px 15px rgba(189, 170, 233, 0.15);
+}
+   </string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_5">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>15</number>
+   </property>
+   <property name="topMargin">
+    <number>10</number>
+   </property>
+   <property name="rightMargin">
+    <number>15</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
    <item>
     <widget class="QWidget" name="widget" native="true">
      <property name="sizePolicy">
@@ -30,82 +74,219 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>70</width>
+       <height>70</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>70</width>
+       <height>70</height>
       </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(189, 170, 233, 120),
+                stop:0.5 rgba(201, 182, 243, 120),
+                stop:1 rgba(213, 194, 253, 120));
+    border: 2px solid rgba(189, 170, 233, 80);
+    border-radius: 35px;
+    margin: 0px;
+}
+
+QWidget:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(189, 170, 233, 150),
+                stop:0.5 rgba(201, 182, 243, 150),
+                stop:1 rgba(213, 194, 253, 150));
+    border: 2px solid rgba(189, 170, 233, 120);
+}
+      </string>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="lab_name">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background:transparent;</string>
-       </property>
-       <property name="text">
-        <string>pro_name</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QWidget" name="nameWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>3</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="sizeHint" stdset="0">
+     <property name="minimumSize">
       <size>
-       <width>40</width>
-       <height>20</height>
+       <width>200</width>
+       <height>0</height>
       </size>
      </property>
-    </spacer>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget_2" native="true">
      <property name="styleSheet">
-      <string notr="true">background:transparent;</string>
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QVBoxLayout" name="nameLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lab_name">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>180</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei</family>
+          <pointsize>13</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    background: transparent;
+    color: rgb(85, 75, 105);
+    font: bold 13pt "Microsoft YaHei";
+    padding: 5px 0px;
+    border: none;
+    margin: 0px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>商品名称</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget_2" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>150</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="priceLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_2">
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;黑体&quot;;</string>
+         <string notr="true">
+QLabel {
+    font: 600 11pt "Microsoft YaHei";
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
         </property>
         <property name="text">
          <string>单价:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lab_price">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;楷体&quot;;
-color:rgb(226, 129, 225);</string>
+         <string notr="true">
+QLabel {
+    font: bold 12pt "Microsoft YaHei";
+    color: rgb(189, 170, 233);
+    background: rgba(189, 170, 233, 15);
+    padding: 6px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(189, 170, 233, 40);
+    margin: 0px;
+}
+         </string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string>￥0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -114,34 +295,97 @@ color:rgb(226, 129, 225);</string>
    </item>
    <item>
     <widget class="QWidget" name="widget_3" native="true">
-     <property name="styleSheet">
-      <string notr="true">background:transparent;</string>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="numLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_4">
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;黑体&quot;;</string>
+         <string notr="true">
+QLabel {
+    font: 600 11pt "Microsoft YaHei";
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
         </property>
         <property name="text">
          <string>数量:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lab_num">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;楷体&quot;;
-color:rgb(0, 151, 227);</string>
+         <string notr="true">
+QLabel {
+    font: bold 12pt "Microsoft YaHei";
+    color: rgb(120, 180, 220);
+    background: rgba(120, 180, 220, 15);
+    padding: 6px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(120, 180, 220, 40);
+    margin: 0px;
+}
+         </string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string>1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -150,34 +394,98 @@ color:rgb(0, 151, 227);</string>
    </item>
    <item>
     <widget class="QWidget" name="widget_4" native="true">
-     <property name="styleSheet">
-      <string notr="true">background:transparent;</string>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <property name="minimumSize">
+      <size>
+       <width>130</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>160</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="totalLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_6">
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;黑体&quot;;</string>
+         <string notr="true">
+QLabel {
+    font: 600 11pt "Microsoft YaHei";
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
         </property>
         <property name="text">
          <string>总价:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lab_tolprice">
+        <property name="minimumSize">
+         <size>
+          <width>90</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 11pt &quot;楷体&quot;;
-color:rgb(255, 85, 0);</string>
+         <string notr="true">
+QLabel {
+    font: bold 13pt "Microsoft YaHei";
+    color: rgb(220, 130, 150);
+    background: rgba(220, 130, 150, 18);
+    padding: 6px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(220, 130, 150, 50);
+    margin: 0px;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+}
+         </string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string>￥0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>

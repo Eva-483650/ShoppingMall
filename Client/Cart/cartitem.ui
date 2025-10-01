@@ -6,39 +6,101 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>561</width>
-    <height>82</height>
+    <width>694</width>
+    <height>110</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>80</height>
+    <width>600</width>
+    <height>110</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>166720</width>
-    <height>82</height>
+    <width>16777215</width>
+    <height>110</height>
    </size>
   </property>
   <property name="font">
    <font>
-    <family>Microsoft YaHei UI</family>
+    <family>Microsoft YaHei</family>
    </font>
   </property>
   <property name="focusPolicy">
-   <enum>Qt::ClickFocus</enum>
-  </property>
-  <property name="contextMenuPolicy">
-   <enum>Qt::DefaultContextMenu</enum>
+   <enum>Qt::FocusPolicy::ClickFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background: rgba(255, 255, 255, 250);
+    border: 1px solid rgba(230, 230, 230, 100);
+    border-radius: 12px;
+    font-family: &quot;Microsoft YaHei&quot;;
+    margin: 2px;
+}
+
+QWidget:hover {
+    background: transparent;  /* 让列表项的hover样式生效 */
+    border: none;
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>15</number>
+   </property>
+   <property name="topMargin">
+    <number>10</number>
+   </property>
+   <property name="rightMargin">
+    <number>15</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
    <item>
     <widget class="QRadioButton" name="radioButton">
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QRadioButton {
+    background: transparent;
+    color: rgb(110, 100, 130);
+    font: 600 12pt &quot;Microsoft YaHei&quot;;
+}
+
+QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border: 2px solid rgba(189, 170, 233, 80);
+    background: rgba(255, 255, 255, 200);
+}
+
+QRadioButton::indicator:checked {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(189, 170, 233, 255),
+                stop:0.5 rgba(201, 182, 243, 255),
+                stop:1 rgba(213, 194, 253, 255));
+    border: 2px solid rgba(189, 170, 233, 120);
+}
+
+QRadioButton::indicator:hover {
+    border: 2px solid rgba(189, 170, 233, 120);
+    background: rgba(240, 235, 250, 200);
+}
+      </string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -46,135 +108,492 @@
    </item>
    <item>
     <widget class="QWidget" name="widMusicPic" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>70</width>
+       <height>70</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>70</width>
+       <height>70</height>
       </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+      QWidget {
+          background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                      stop:0 rgba(189, 170, 233, 120),
+                      stop:0.5 rgba(201, 182, 243, 120),
+                      stop:1 rgba(213, 194, 253, 120));
+          border: 2px solid rgba(189, 170, 233, 80);
+          border-radius: 12px;  /* 改为圆角矩形，原来是35px的圆形 */
+          margin: 0px;
+      }
+
+      QWidget:hover {
+          background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                      stop:0 rgba(189, 170, 233, 150),
+                      stop:0.5 rgba(201, 182, 243, 150),
+                      stop:1 rgba(213, 194, 253, 150));
+          border: 2px solid rgba(189, 170, 233, 120);
+      }
+      </string>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="ProName">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>12</pointsize>
-         <weight>9</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 75 12pt &quot;微软雅黑&quot;;
-color:rgb(47, 70, 55);</string>
-       </property>
-       <property name="text">
-        <string>ProName</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QWidget" name="nameWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>3</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>180</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="nameLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="ProName">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>160</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei</family>
+          <pointsize>13</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    background: transparent;
+    color: rgb(85, 75, 105);
+    font: bold 13pt &quot;Microsoft YaHei&quot;;
+    padding: 5px 0px;
+    border: none;
+    margin: 0px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>商品名称</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <property name="spacing">
-      <number>11</number>
+    <widget class="QWidget" name="priceWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="rightMargin">
-      <number>15</number>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
      </property>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>78</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="ProPrice">
-       <property name="font">
-        <font>
-         <family>Cambria Math</family>
-         <pointsize>12</pointsize>
-         <weight>50</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">
-font: 12pt &quot;Cambria Math&quot;;
-color: #333;</string>
-       </property>
-       <property name="text">
-        <string>ProPrice</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ProNum">
-       <property name="styleSheet">
-        <string notr="true">
-font: 12pt &quot;Cambria Math&quot;;
-color: #333;</string>
-       </property>
-       <property name="text">
-        <string>数量：</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-     <widget class="QSpinBox" name="spinBox">
-         <property name="font">
-             <font>
-                 <family>Microsoft YaHei UI</family>
-                 <pointsize>11</pointsize>
-             </font>
-         </property>
-         <property name="minimum">
-             <number>0</number>  <!-- 改为0 -->
-         </property>
-         <property name="maximum">
-             <number>9999</number>  <!-- 改为9999 -->
-         </property>
-         <property name="value">
-             <number>1</number>
-         </property>
-     </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ProTolPrice">
-       <property name="styleSheet">
-        <string notr="true">color: rgb(255, 85, 127);
-font: 12pt &quot;Cambria Math&quot;;</string>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     <property name="maximumSize">
+      <size>
+       <width>150</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="priceLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="priceLabel">
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    font: 600 11pt &quot;Microsoft YaHei&quot;;
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>单价:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ProPrice">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei</family>
+          <pointsize>12</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    font: bold 12pt &quot;Microsoft YaHei&quot;;
+    color: rgb(189, 170, 233);
+    background: rgba(189, 170, 233, 15);
+    padding: 6px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(189, 170, 233, 40);
+    margin: 0px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>￥0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="quantityWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>140</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="quantityLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="ProNum">
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    font: 600 11pt &quot;Microsoft YaHei&quot;;
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>数量:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Microsoft YaHei</family>
+          <pointsize>11</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QSpinBox {
+    background: rgba(120, 180, 220, 15);
+    border: 1px solid rgba(120, 180, 220, 40);
+    border-radius: 12px;
+    padding: 4px 8px;
+    color: rgb(120, 180, 220);
+    font: bold 11pt &quot;Microsoft YaHei&quot;;
+}
+
+QSpinBox:hover {
+    background: rgba(120, 180, 220, 25);
+    border: 1px solid rgba(120, 180, 220, 60);
+}
+
+QSpinBox:focus {
+    background: rgba(120, 180, 220, 20);
+    border: 2px solid rgba(120, 180, 220, 80);
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    background: transparent;
+    border: none;
+    width: 16px;
+    height: 14px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background: rgba(120, 180, 220, 30);
+    border-radius: 6px;
+}
+         </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="totalWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>130</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>160</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="totalLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="totalLabel">
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    font: 600 11pt &quot;Microsoft YaHei&quot;;
+    color: rgb(110, 100, 130);
+    background: transparent;
+    border: none;
+    margin: 0px;
+    padding: 2px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>小计:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ProTolPrice">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    font: bold 13pt &quot;Microsoft YaHei&quot;;
+    color: rgb(220, 130, 150);
+    background: rgba(220, 130, 150, 18);
+    padding: 6px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(220, 130, 150, 50);
+    margin: 0px;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>￥0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

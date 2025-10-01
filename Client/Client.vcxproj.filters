@@ -53,6 +53,9 @@
     <ClCompile Include="Cart\cartitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cart\cartpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Contact\contactpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Order\orderpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Order\paydialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="person.cpp">
@@ -104,15 +110,15 @@
     <ClCompile Include="Shop\textticker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cart\cartpage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Home\carouselimagewindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Cart\cartitem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Cart\cartpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Contact\contactpage.h">
@@ -136,7 +142,13 @@
     <QtMoc Include="Order\orderpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Order\paydialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="person.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shop\product.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="Shop\productitem.h">
@@ -158,9 +170,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Shop\textticker.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Cart\cartpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -220,73 +229,76 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\picturewall\1.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="images\login\1.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\1.png">
+    <None Include="images\picturewall\10.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\1.png">
+    <None Include="images\picturewall\11.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\10.png">
+    <None Include="images\picturewall\12.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\10.png">
+    <None Include="images\picturewall\13.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\2.png">
+    <None Include="images\picturewall\14.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\2.png">
+    <None Include="images\picturewall\15.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\3.png">
+    <None Include="images\picturewall\2.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\3.png">
+    <None Include="images\picturewall\3.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\4.png">
+    <None Include="images\picturewall\4.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\4.png">
+    <None Include="images\picturewall\5.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\5.png">
+    <None Include="images\picturewall\6.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\5.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="images\picturewall\6.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="images\products\6.png">
+    <None Include="images\picturewall\7.jpg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\login\7.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\7.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="images\products\7.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="images\picturewall\8.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="images\products\8.png">
+    <None Include="images\picturewall\8.jpg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\users\82342070_p0-min.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\picturewall\9.png">
+    <None Include="images\picturewall\9.jpg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\9.png">
+    <None Include="images\products\adidas_tshirt.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\login\bg_login.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\login\bg_register_wizard.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\chanel.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\icons\down-arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\error.jpg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\icons\icon1.png">
@@ -307,7 +319,25 @@
     <None Include="images\users\illust_58445343_20190421_183611-min.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="images\products\picerror.jpg">
+    <None Include="images\products\iphone17.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\lenovo.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\mate60.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\midea_airfryer.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\nike.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\oppo_earbuds.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\philips.jpg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="images\icons\picerror.png">
@@ -316,10 +346,11 @@
     <QtRcc Include="src.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Shop\product.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="images\icons\up-arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\products\xiaomi_band8.jpg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -26,6 +26,10 @@ public:
 	int getmoney() { return money; }
 	void setmoney(int num) { money = num; }
 
+	// 新增：setMoney 方法 - 支持QString和int参数
+	void setMoney(const QString& newMoney) { money = newMoney.toInt(); }
+	void setMoney(int newMoney) { money = newMoney; }
+
 	// 如果你确实需要单独设置 id（一般不建议随意改）可以放开：
 	void setId(int v) { id = v; }
 

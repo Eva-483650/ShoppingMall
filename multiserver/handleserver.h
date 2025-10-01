@@ -32,6 +32,9 @@ private:
     void handleSearchOrder(QJsonObject body,qintptr port);
     void handleSearchOrderItems(QJsonObject body,qintptr port);
 
+    // ¸¶¿îÂß¼­
+    void handlePayOrder(QJsonObject body, qintptr port);
+
 public slots:
     void handleRequest(const QString&,const qintptr, const QByteArray);
 signals:

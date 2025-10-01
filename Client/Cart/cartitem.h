@@ -50,6 +50,9 @@ public slots:
 private:
 	void setupUI();
 
+protected:
+     bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
 	Ui::CartItem* ui;
 	int m_id;

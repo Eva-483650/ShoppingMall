@@ -6,60 +6,94 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>526</width>
-    <height>499</height>
+    <width>694</width>
+    <height>600</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>购物车</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-QWidget {
-    background: #f7f6fb;
+   <string notr="true">QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(252, 250, 255, 255),
+                stop:0.5 rgba(250, 247, 254, 255),
+                stop:1 rgba(248, 245, 253, 255));
+    font-family: &quot;Microsoft YaHei&quot;;
 }
+
 QListWidget {
-    background: #f7f6fb;
-    border-radius: 12px;
-    border: 1px solid #e4e1ee;
-    font-size: 15px;
-}
-QListWidget::Item {
-    background: white;
-    border-radius: 10px;
-    margin: 8px;
-    padding: 12px;
-    border: 1px solid #ece9f6;
-    min-height: 80px;
-    transition: box-shadow 0.2s;
-}
-QListWidget::Item:hover {
-    background: #ece9f6;
-    box-shadow: 0 4px 16px rgba(120, 120, 170, 0.08);
-}
-QPushButton {
-    background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:0,stop:0 #c2b6f3,stop:1 #a18cd1);
-    border-radius: 12px;
-    color: white;
-    font-size: 15px;
-    padding: 7px 24px;
+    background: rgba(255, 255, 255, 180);
     border: none;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(160,140,209,0.10);
+    border-radius: 0px;
+    padding: 10px;
+    font: 12pt &quot;Microsoft YaHei&quot;;
+    color: rgb(80, 70, 95);
+    outline: none;
 }
+
+QListWidget::item {
+    background: transparent;
+    border: none;
+    padding: 5px;
+    margin: 3px 0px;
+    min-height: 100px;
+}
+
+QListWidget::item:hover {
+    background: rgba(240, 235, 250, 100);
+    border-radius: 8px;
+}
+
+QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(189, 170, 233, 255),
+                stop:0.5 rgba(195, 176, 238, 255),
+                stop:1 rgba(201, 182, 243, 255));
+    border: 1px solid rgba(255, 255, 255, 90);
+    border-radius: 18px;
+    color: white;
+    font: bold 14pt &quot;Microsoft YaHei&quot;;
+    padding: 12px 24px;
+    min-height: 40px;
+}
+
 QPushButton:hover {
-    background: #a18cd1;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(195, 176, 238, 255),
+                stop:0.5 rgba(201, 182, 243, 255),
+                stop:1 rgba(207, 188, 248, 255));
+    border: 1px solid rgba(255, 255, 255, 110);
+    transform: translateY(-1px);
+    box-shadow: 0px 4px 15px rgba(189, 170, 233, 0.2);
 }
+
 QPushButton:pressed {
-    background: #c2b6f3;
-    color: #eee;
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(179, 160, 223, 255),
+                stop:0.5 rgba(189, 170, 233, 255),
+                stop:1 rgba(195, 176, 238, 255));
+    transform: translateY(0px);
+    box-shadow: 0px 2px 8px rgba(189, 170, 233, 0.25);
 }
+
 QLabel {
-    color: #4f407a;
+    color: rgb(110, 100, 130);
+    font: 14pt &quot;Microsoft YaHei&quot;;
+    background: transparent;
 }
    </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -69,8 +103,11 @@ QLabel {
    <property name="rightMargin">
     <number>0</number>
    </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="headerWidget" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -80,117 +117,276 @@ QLabel {
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>60</height>
+       <height>80</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>华文宋体</family>
-       <pointsize>20</pointsize>
-       <italic>false</italic>
-       <bold>true</bold>
-      </font>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>80</height>
+      </size>
      </property>
      <property name="styleSheet">
       <string notr="true">
-background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:0,stop:0 #c2b6f3,stop:1 #a18cd1);
-color:rgb(255,255,255);
-border-top-left-radius: 12px;
-border-top-right-radius: 12px;
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(189, 170, 233, 255),
+                stop:0.5 rgba(195, 176, 238, 255),
+                stop:1 rgba(201, 182, 243, 255));
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin: 0px;
+}
       </string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="headerLayout">
+      <property name="spacing">
+       <number>20</number>
+      </property>
+      <property name="leftMargin">
+       <number>30</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>30</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="cartIcon">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QLabel {
+    background: rgba(255, 255, 255, 40);
+    border: 2px solid rgba(255, 255, 255, 80);
+    border-radius: 20px;
+    color: white;
+    font: bold 18pt &quot;Microsoft YaHei&quot;;
+    padding: 0px;
+}
+         </string>
+        </property>
+        <property name="text">
+         <string>🛒</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="titleLabel">
         <property name="font">
          <font>
-          <family>微软雅黑</family>
-          <pointsize>22</pointsize>
+          <family>Microsoft YaHei</family>
+          <pointsize>24</pointsize>
           <italic>false</italic>
           <bold>true</bold>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 700 22pt &quot;微软雅黑&quot;; color: #fff; letter-spacing: 2px;
-</string>
+         <string notr="true">
+QLabel {
+    font: bold 24pt &quot;Microsoft YaHei&quot;;
+    color: white;
+    letter-spacing: 3px;
+    background: transparent;
+    border: none;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+         </string>
         </property>
         <property name="text">
          <string>购 物 车</string>
         </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
         <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-        <property name="indent">
-         <number>5</number>
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="headerSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="QListWidget" name="list_item"/>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget_2" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" name="contentWidget" native="true">
+     <property name="styleSheet">
+      <string notr="true">
+QWidget {
+    background: transparent;
+    border: none;
+    margin: 0px;
+}
+      </string>
+     </property>
+     <layout class="QVBoxLayout" name="contentLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
       <item>
-       <widget class="QLabel" name="lab_tolprice">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>2</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <family>微软雅黑</family>
-          <pointsize>16</pointsize>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 16pt &quot;微软雅黑&quot;; color:#6c5b7b;</string>
-        </property>
-        <property name="text">
-         <string>总价:</string>
+       <widget class="QListWidget" name="list_item">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>300</height>
+         </size>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btn_buy">
+       <widget class="QWidget" name="bottomWidget" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>1</horstretch>
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
-          <height>36</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>160</width>
+          <width>0</width>
           <height>80</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <family>微软雅黑</family>
-          <pointsize>-1</pointsize>
-          <bold>true</bold>
-         </font>
+        <property name="styleSheet">
+         <string notr="true">
+QWidget {
+    background: rgba(255, 255, 255, 200);
+    border: 1px solid rgba(189, 170, 233, 30);
+    border-radius: 15px;
+    margin: 5px;
+    padding: 10px;
+}
+         </string>
         </property>
-        <property name="text">
-         <string>结算</string>
-        </property>
+        <layout class="QHBoxLayout" name="bottomLayout">
+         <property name="spacing">
+          <number>20</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>15</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>15</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lab_tolprice">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>2</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>18</pointsize>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel {
+    font: bold 18pt &quot;Microsoft YaHei&quot;;
+    color: rgb(189, 170, 233);
+    background: transparent;
+    border: none;
+    padding: 5px 10px;
+}
+            </string>
+           </property>
+           <property name="text">
+            <string>总价: ￥0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_buy">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>120</width>
+             <height>72</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>160</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>14</pointsize>
+             <italic>false</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(189, 170, 233)</string>
+           </property>
+           <property name="text">
+            <string>立即结算</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

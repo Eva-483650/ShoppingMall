@@ -85,8 +85,7 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DEPRECATED_WARNINGS;NDEBUG;QT_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
-      <ProgramDataBaseFileName>
-      </ProgramDataBaseFileName>
+      <ProgramDataBaseFileName></ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -205,12 +204,7 @@
   <ItemGroup>
     <ClCompile Include="Home\carouselimagewindow.cpp" />
     <ClCompile Include="Cart\cartitem.cpp" />
-    <ClCompile Include="Cart\cartpage.cpp">
-      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
-      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
-      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
-      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
-    </ClCompile>
+    <ClCompile Include="Cart\cartpage.cpp" />
     <ClCompile Include="Contact\contactpage.cpp" />
     <ClCompile Include="Home\homepage.cpp" />
     <ClCompile Include="loginwgt.cpp" />
@@ -219,6 +213,7 @@
     <ClCompile Include="Me\mepage.cpp" />
     <ClCompile Include="Order\orderitem.cpp" />
     <ClCompile Include="Order\orderpage.cpp" />
+    <ClCompile Include="Order\paydialog.cpp" />
     <ClCompile Include="person.cpp" />
     <ClCompile Include="Shop\product.cpp" />
     <ClCompile Include="Shop\productitem.cpp" />
@@ -240,6 +235,7 @@
     <QtMoc Include="Me\mepage.h" />
     <QtMoc Include="Order\orderitem.h" />
     <QtMoc Include="Order\orderpage.h" />
+    <QtMoc Include="Order\paydialog.h" />
     <ClInclude Include="person.h" />
     <ClInclude Include="Shop\product.h" />
     <QtMoc Include="Shop\productitem.h" />
@@ -284,38 +280,47 @@
     <QtUic Include="shoppingclient.ui" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\picturewall\1.jpg" />
     <None Include="images\login\1.png" />
-    <None Include="images\picturewall\1.png" />
-    <None Include="images\products\1.png" />
-    <None Include="images\picturewall\10.png" />
-    <None Include="images\products\10.png" />
-    <None Include="images\picturewall\2.png" />
-    <None Include="images\products\2.png" />
-    <None Include="images\picturewall\3.png" />
-    <None Include="images\products\3.png" />
-    <None Include="images\picturewall\4.png" />
-    <None Include="images\products\4.png" />
-    <None Include="images\picturewall\5.png" />
-    <None Include="images\products\5.png" />
-    <None Include="images\picturewall\6.png" />
-    <None Include="images\products\6.png" />
+    <None Include="images\picturewall\10.jpg" />
+    <None Include="images\picturewall\11.jpg" />
+    <None Include="images\picturewall\12.jpg" />
+    <None Include="images\picturewall\13.jpg" />
+    <None Include="images\picturewall\14.jpg" />
+    <None Include="images\picturewall\15.jpg" />
+    <None Include="images\picturewall\2.jpg" />
+    <None Include="images\picturewall\3.jpg" />
+    <None Include="images\picturewall\4.jpg" />
+    <None Include="images\picturewall\5.jpg" />
+    <None Include="images\picturewall\6.jpg" />
+    <None Include="images\picturewall\7.jpg" />
     <None Include="images\login\7.png" />
-    <None Include="images\picturewall\7.png" />
-    <None Include="images\products\7.png" />
-    <None Include="images\picturewall\8.png" />
-    <None Include="images\products\8.png" />
+    <None Include="images\picturewall\8.jpg" />
     <None Include="images\users\82342070_p0-min.jpg" />
-    <None Include="images\picturewall\9.png" />
-    <None Include="images\products\9.png" />
+    <None Include="images\picturewall\9.jpg" />
+    <None Include="images\products\adidas_tshirt.jpg" />
+    <None Include="images\login\bg_login.jpg" />
+    <None Include="images\login\bg_register_wizard.jpg" />
+    <None Include="images\products\chanel.jpg" />
+    <None Include="images\icons\down-arrow.png" />
+    <None Include="images\products\error.jpg" />
     <None Include="images\icons\icon1.png" />
     <None Include="images\icons\icon2.png" />
     <None Include="images\icons\icon3.png" />
     <None Include="images\users\illust_35548907_20190130_151911-min.jpg" />
     <None Include="images\users\illust_54355379_20190130_152051-min.jpg" />
     <None Include="images\users\illust_58445343_20190421_183611-min.png" />
-    <None Include="images\products\picerror.jpg" />
+    <None Include="images\products\iphone17.jpg" />
+    <None Include="images\products\lenovo.jpg" />
+    <None Include="images\products\mate60.jpg" />
+    <None Include="images\products\midea_airfryer.jpg" />
+    <None Include="images\products\nike.jpg" />
+    <None Include="images\products\oppo_earbuds.jpg" />
+    <None Include="images\products\philips.jpg" />
     <None Include="images\icons\picerror.png" />
     <QtRcc Include="src.qrc" />
+    <None Include="images\icons\up-arrow.png" />
+    <None Include="images\products\xiaomi_band8.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(QtMsBuild)\qt.targets" Condition="Exists('$(QtMsBuild)\qt.targets')" />

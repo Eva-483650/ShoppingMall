@@ -14,6 +14,7 @@ class OrderItem : public QWidget
 
 public:
     OrderItem(QJsonObject obj);
+    void optimizeItemLayout();
     ~OrderItem();
     void setProname(QString name);
     void setPicture(QString url);
