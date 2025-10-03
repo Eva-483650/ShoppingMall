@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include "person.h"
 #include "slidenavigation.h"
+#include "Order/couponselectdialog.h"
 
 extern QString FLAG_CHARACTER;
 extern QString PIC_PATH;
@@ -37,6 +38,7 @@ public:
     void error(QChar character, QString errmsg);
     bool getConnected();
 
+    void updateUserBalance(int newBalance);
     Person* getPerson();
 
 protected:

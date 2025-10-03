@@ -35,6 +35,18 @@ private:
     // 付款逻辑
     void handlePayOrder(QJsonObject body, qintptr port);
 
+    //优惠券逻辑
+	// 在 HandleServer 类的 private 部分添加
+	void handleGetUserCoupons(QJsonObject body, qintptr port);
+	void handleUseCoupon(QJsonObject body, qintptr port);
+	void handleGetMerchantDiscounts(QJsonObject body, qintptr port);
+	void handleCalculateOrderPrice(QJsonObject body, qintptr port);
+
+	// 辅助函数
+	int calculateCouponDiscount(int couponId, int orderAmount, int userId);
+	int calculateMerchantDiscount(const QJsonArray& products);
+	bool validateCouponUsage(int userId, int couponId, int orderAmount);
+
 public slots:
     void handleRequest(const QString&,const qintptr, const QByteArray);
 signals:

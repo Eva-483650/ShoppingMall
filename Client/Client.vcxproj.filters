@@ -59,6 +59,12 @@
     <ClCompile Include="Contact\contactpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Order\couponitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Order\couponselectdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Home\homepage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -122,6 +128,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Contact\contactpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Order\couponitem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Order\couponselectdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Home\homepage.h">

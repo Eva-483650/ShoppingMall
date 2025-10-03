@@ -206,6 +206,8 @@
     <ClCompile Include="Cart\cartitem.cpp" />
     <ClCompile Include="Cart\cartpage.cpp" />
     <ClCompile Include="Contact\contactpage.cpp" />
+    <ClCompile Include="Order\couponitem.cpp" />
+    <ClCompile Include="Order\couponselectdialog.cpp" />
     <ClCompile Include="Home\homepage.cpp" />
     <ClCompile Include="loginwgt.cpp" />
     <ClCompile Include="main.cpp" />
@@ -229,6 +231,8 @@
     <QtMoc Include="Cart\cartitem.h" />
     <QtMoc Include="Cart\cartpage.h" />
     <QtMoc Include="Contact\contactpage.h" />
+    <QtMoc Include="Order\couponitem.h" />
+    <QtMoc Include="Order\couponselectdialog.h" />
     <QtMoc Include="Home\homepage.h" />
     <QtMoc Include="loginwgt.h" />
     <QtMoc Include="Me\meitem.h" />

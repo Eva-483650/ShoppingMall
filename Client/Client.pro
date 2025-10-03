@@ -26,6 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 CONFIG += resources_big
 SOURCES += \
+    Order/couponitem.cpp \
+    Order/couponselectdialog.cpp \
     Order/paydialog.cpp \
         main.cpp \
     shoppingclient.cpp \
@@ -51,6 +53,8 @@ SOURCES += \
 
 
 HEADERS += \
+    Order/couponitem.h \
+    Order/couponselectdialog.h \
     Order/paydialog.h \
     shoppingclient.h \
     slidenavigation.h\

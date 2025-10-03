@@ -289,8 +289,7 @@ QWidget {
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">
-QWidget {
+         <string notr="true">QWidget {
     background: rgba(255, 255, 255, 200);
     border: 1px solid rgba(189, 170, 233, 30);
     border-radius: 15px;
@@ -304,13 +303,13 @@ QWidget {
           <number>20</number>
          </property>
          <property name="leftMargin">
-          <number>0</number>
+          <number>20</number>
          </property>
          <property name="topMargin">
           <number>15</number>
          </property>
          <property name="rightMargin">
-          <number>0</number>
+          <number>20</number>
          </property>
          <property name="bottomMargin">
           <number>15</number>
@@ -332,8 +331,7 @@ QWidget {
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">
-QLabel {
+            <string notr="true">QLabel {
     font: bold 18pt &quot;Microsoft YaHei&quot;;
     color: rgb(189, 170, 233);
     background: transparent;

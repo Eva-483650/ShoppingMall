@@ -1,5 +1,6 @@
 #include "shoppingclient.h"
 #include "ui_shoppingclient.h"
+
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QDebug>
@@ -53,6 +54,16 @@ void ShoppingClient::helpConnect() {
     connect(ui->ShopP, SIGNAL(signal_addToCart(Product*)), ui->CartP, SLOT(addToCart(Product*)));
     connect(this, SIGNAL(signal_someonelogin(Person*)), ui->MeP, SLOT(getSomeone(Person*)));
     connect(ui->CartP, SIGNAL(signal_updateUserMoney(int)), ui->MeP, SLOT(updateUserMoney(int)));
+}
+
+void ShoppingClient::updateUserBalance(int newBalance) {
+    // 更新用户对象的余额
+    if (logined_user) {
+        logined_user->setMoney(QString::number(newBalance));
+    }
+
+    // 发射信号更新购物车页面的余额显示
+    emit ui->CartP->signal_updateUserMoney(newBalance);
 }
 
 void ShoppingClient::changePage(qintptr index) {

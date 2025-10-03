@@ -2,6 +2,8 @@ D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Home\carouseli
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Cart\cartitem.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\cartitem.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Cart\cartpage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\cartpage.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Contact\contactpage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\contactpage.obj
+D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Order\couponitem.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\couponitem.obj
+D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Order\couponselectdialog.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\couponselectdialog.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Home\homepage.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\homepage.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\loginwgt.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\loginwgt.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\main.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\main.obj
@@ -38,3 +40,5 @@ D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_shop
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_shoppingclient.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_shoppingclient.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_slidenavigation.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_slidenavigation.obj
 D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_textticker.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_textticker.obj
+D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_couponitem.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_couponitem.obj
+D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\Debug\moc_couponselectdialog.cpp;D:\study\c++\Qt-ShoppingMall-master\Qt-ShoppingMall-master\Client\debug\moc_couponselectdialog.obj

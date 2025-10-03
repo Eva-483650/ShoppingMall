@@ -11,6 +11,7 @@
 #include <QListWidgetItem>
 #include <QMap>
 #include "paydialog.h"
+#include "couponselectdialog.h"
 
 namespace Ui {
     class OrderPage;
@@ -32,16 +33,17 @@ public:
     void setStatus(QString status);
     void setPrice(QString price);
 
+
 private slots:
     void nextOrder();
     void backOrder();
     void payCurrentOrder();  // 付款槽函数
 
 private:
-    Ui::OrderPage* ui;
+
     int current;
     QPushButton* btn_pay;  // 在这里声明付款按钮，而不是在ui中
-
+    Ui::OrderPage* ui;
     void showEvent(QShowEvent* event);
     void getAllOrder();
     void updateOrderItems(QString ordernum);

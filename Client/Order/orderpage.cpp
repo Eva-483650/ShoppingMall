@@ -354,14 +354,23 @@ void OrderPage::payCurrentOrder() {
         orderId = currentDisplayedOrderId;
     }
 
-    PayDialog* payDialog = new PayDialog(orderId, orderPrice, userBalance, this);
+    // 修改这里：传递 client 指针给 PayDialog
+    PayDialog* payDialog = new PayDialog(orderId, orderPrice, userBalance, client, this);
+
     if (payDialog->exec() == QDialog::Accepted) {
         // 发送付款请求
+        qDebug() << "发送请求 - 协议码: 15001";
         QString FLAG_INSKIND = "04";
         QString FLAG_INS = "06";
         QJsonObject obj;
         obj.insert("order_id", payDialog->getOrderId());
         obj.insert("user_id", QString::number(client->getPerson()->getId()));
+
+        // 新增：如果使用了优惠券，添加优惠券信息
+        if (payDialog->getSelectedCouponId() > 0) {
+            obj.insert("coupon_id", payDialog->getSelectedCouponId());
+            obj.insert("coupon_discount", payDialog->getCouponDiscount());
+        }
 
         QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER + FLAG_INSKIND + FLAG_INS, obj);
         QString flag = client->parseHead(data);
@@ -371,15 +380,34 @@ void OrderPage::payCurrentOrder() {
             if (!result.isEmpty()) {
                 QJsonObject payResult = result[0].toObject();
                 QString remainingBalance = payResult.value("remaining_balance").toString();
+                QString paidAmount = payResult.value("paid_amount").toString();
 
                 // 更新客户端用户余额
                 client->getPerson()->setMoney(remainingBalance);
 
-                QMessageBox::information(this, "付款成功",
-                                         QString("付款成功！\n订单号：%1\n付款金额：￥%2\n剩余余额：￥%3")
-                                             .arg(orderId)
-                                             .arg(orderPrice)
-                                             .arg(remainingBalance));
+                // 修改成功提示信息，显示优惠券使用情况
+                QString successMsg = QString("付款成功！\n订单号：%1").arg(orderId);
+
+                // 如果使用了优惠券，显示优惠信息
+                if (payDialog->getSelectedCouponId() > 0) {
+                    int originalPrice = orderPrice.toInt();
+                    int discountAmount = payDialog->getCouponDiscount();
+                    int finalPrice = paidAmount.toInt();
+
+                    successMsg += QString("\n\n原价：￥%1\n优惠券优惠：￥%2\n实付金额：￥%3")
+                                      .arg(originalPrice)
+                                      .arg(discountAmount)
+                                      .arg(finalPrice);
+                } else {
+                    successMsg += QString("\n付款金额：￥%1").arg(paidAmount);
+                }
+
+                successMsg += QString("\n剩余余额：￥%1").arg(remainingBalance);
+
+                QMessageBox::information(this, "付款成功", successMsg);
+
+                // 修正：发射信号更新用户余额显示
+                client->updateUserBalance(remainingBalance.toInt());
 
                 // 刷新订单信息
                 getAllOrder();
@@ -387,6 +415,13 @@ void OrderPage::payCurrentOrder() {
         }
         else {
             QString errorMsg = client->parseError(data);
+
+            // 如果付款失败且使用了优惠券，需要回滚优惠券状态
+            if (payDialog->getSelectedCouponId() > 0) {
+                // 这里可以添加回滚优惠券的逻辑，或者在服务器端处理
+                errorMsg += "\n\n注意：如果优惠券已被使用，请联系客服处理。";
+            }
+
             QMessageBox::warning(this, "付款失败", errorMsg);
         }
     }
