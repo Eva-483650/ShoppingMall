@@ -18,7 +18,7 @@
 QWidget#ShoppingClient {
     background: qlineargradient(spread:pad,x1:1,y1:0,x2:0,y2:1,
                 stop:0 #e8e6fb, stop:0.6 #d6c9f7, stop:1 #b8a4e6);
-    font-family:"微软雅黑";
+    font-family:&quot;微软雅黑&quot;;
 }
 /* PageStack 透明，防止叠加底部灰层 */
 QStackedWidget {
@@ -69,20 +69,27 @@ QStackedWidget {
 QWidget#BottomNav { background: transparent; }
       </string>
      </property>
-     <property name="minimumHeight">
-      <number>72</number>
-     </property>
     </widget>
    </item>
   </layout>
-  <zorder>PageStack</zorder>
-  <zorder>BottomNav</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>SlideNavigation</class>
    <extends>QWidget</extends>
    <header>slidenavigation.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ContactPage</class>
+   <extends>QWidget</extends>
+   <header>contactpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>OrderPage</class>
+   <extends>QWidget</extends>
+   <header>orderpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -98,21 +105,9 @@ QWidget#BottomNav { background: transparent; }
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ContactPage</class>
-   <extends>QWidget</extends>
-   <header>./Contact/contactpage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CartPage</class>
    <extends>QWidget</extends>
    <header>./Cart/cartpage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>OrderPage</class>
-   <extends>QWidget</extends>
-   <header>./Order/orderpage.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -47,10 +47,13 @@ void HandleServer::handleRequest(const QString& ip, const qintptr port, const QB
 						break;
 					}
 					break;
-				case 2:
+				case 2: // 商品操作
 					switch (flag_ins) {
-					case 4: handleSearchProduct(body, port); break;
-					case 5: handleBuySth(body, port); break;
+					case 1: handleAddProduct(body, port); break;      // 协议码 20101
+					case 2: handleUpdateProduct(body, port); break;   // 协议码 20102  
+					case 3: handleDeleteProduct(body, port); break;   // 协议码 20103
+					case 4: handleSearchProduct(body, port); break;   // 协议码 20104（已存在）
+					case 6: handleGetAllProducts(body, port); break;  // 协议码 20106
 					default: jsonResReady("2", QJsonArray(), port, "未知商品操作"); break;
 					}
 					break;
@@ -131,23 +134,53 @@ void HandleServer::handleManagerLogin(QJsonObject body, qintptr port) {
 
 void HandleServer::handleRegister(QJsonObject body, qintptr port) {
 	QString table = "users";
-	if (body.contains("user_name")) {
-		QString _name = body.value("user_name").toString();
+
+	QJsonObject dbBody;
+
+	// 只插入基础字段，跳过 Newsletter
+	if (body.contains("user_name"))
+		dbBody.insert("User_name", body.value("user_name"));
+	if (body.contains("user_password"))
+		dbBody.insert("User_password", body.value("user_password"));
+	if (body.contains("user_address"))
+		dbBody.insert("User_address", body.value("user_address"));
+	if (body.contains("user_gender"))
+		dbBody.insert("User_gender", body.value("user_gender"));
+	if (body.contains("user_email"))
+		dbBody.insert("User_email", body.value("user_email"));
+
+	// 完全不处理 Newsletter 字段，让数据库使用默认值
+
+	qDebug() << "准备插入的数据:" << dbBody;
+
+	// 检查用户名重复
+	if (dbBody.contains("User_name")) {
+		QString _name = dbBody.value("User_name").toString();
 		QJsonObject obj;
-		obj.insert("want", "user_name");
+		obj.insert("want", "User_name");
 		obj.insert("isDistinct", "true");
-		obj.insert("restriction", QString("user_name = '%1'").arg(_name));
+		obj.insert("restriction", QString("User_name = '%1'").arg(_name));
 		QJsonArray search;
 		bool fl = sql->selectSth(table, obj, search);
-		if (!fl) { jsonResReady("3", QJsonArray(), port, "查询用户名失败！"); return; }
+		if (!fl) {
+			jsonResReady("3", QJsonArray(), port, "查询用户名失败！");
+			return;
+		}
 		if (!search.isEmpty()) {
 			jsonResReady("2", QJsonArray(), port, "该用户名已被注册！");
 			return;
 		}
 	}
-	bool flag = sql->insertSth(table, body);
-	if (flag) jsonResReady("1", QJsonArray(), port);
-	else jsonResReady("3", QJsonArray(), port, "注册失败！");
+
+	bool flag = sql->insertSth(table, dbBody);
+	if (flag) {
+		qDebug() << "用户注册成功:" << dbBody.value("User_name").toString();
+		jsonResReady("1", QJsonArray(), port);
+	}
+	else {
+		qDebug() << "注册失败";
+		jsonResReady("3", QJsonArray(), port, "注册失败！");
+	}
 }
 
 void HandleServer::handleSearchProduct(QJsonObject body, qintptr port) {
@@ -781,14 +814,19 @@ void HandleServer::handleUseCoupon(QJsonObject body, qintptr port) {
 			return;
 		}
 
-		// 3. 更新优惠券状态为已使用
+		// 3. 计算实际折扣金额
+		int discountAmount = calculateCouponDiscount(couponId, orderAmount, userId);
+		if (discountAmount <= 0) {
+			sql->rollbackTransaction();
+			qDebug() << "优惠券折扣金额无效";
+			jsonResReady("2", QJsonArray(), port, "优惠券折扣金额无效");
+			return;
+		}
+
+		// 4. 更新优惠券状态为已使用
 		QJsonObject updateObj;
 		updateObj.insert("Is_used", "已使用");
 		updateObj.insert("Used_time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-		if (!orderId.isEmpty()) {
-			updateObj.insert("Used_order_id", orderId);
-		}
-
 		updateObj.insert("restriction", QString("User_id = %1 AND Coupon_id = %2").arg(userId).arg(couponId));
 
 		bool updateFlag = sql->updateSth("user_coupon_ownership", updateObj);
@@ -800,7 +838,24 @@ void HandleServer::handleUseCoupon(QJsonObject body, qintptr port) {
 			return;
 		}
 
-		// 4. 提交事务
+		// 5. 如果有订单ID，记录到订单优惠券使用记录表
+		if (!orderId.isEmpty()) {
+			QJsonObject usageRecord;
+			usageRecord.insert("Order_id", orderId);
+			usageRecord.insert("Coupon_id", QString::number(couponId));
+			usageRecord.insert("User_id", QString::number(userId));
+			usageRecord.insert("Discount_amount", QString::number(discountAmount));
+
+			if (!sql->insertSth("order_coupon_usage", usageRecord)) {
+				qDebug() << "插入优惠券使用记录失败，但不回滚事务";
+				// 不回滚事务，因为主要的优惠券使用已经成功
+			}
+			else {
+				qDebug() << "成功记录优惠券使用记录";
+			}
+		}
+
+		// 6. 提交事务
 		if (!sql->commitTransaction()) {
 			sql->rollbackTransaction();
 			qDebug() << "事务提交失败";
@@ -808,8 +863,17 @@ void HandleServer::handleUseCoupon(QJsonObject body, qintptr port) {
 			return;
 		}
 
-		qDebug() << "优惠券使用成功";
-		jsonResReady("1", QJsonArray(), port, "优惠券使用成功");
+		qDebug() << "优惠券使用成功，折扣金额:" << discountAmount;
+
+		// 7. 返回成功响应，包含折扣金额
+		QJsonArray response;
+		QJsonObject resultObj;
+		resultObj.insert("discount_amount", discountAmount);
+		resultObj.insert("coupon_id", couponId);
+		resultObj.insert("message", "优惠券使用成功");
+		response.append(resultObj);
+
+		jsonResReady("1", response, port);
 
 	}
 	catch (...) {
@@ -1112,4 +1176,282 @@ bool HandleServer::validateCouponUsage(int userId, int couponId, int orderAmount
 
 	qDebug() << "优惠券验证通过";
 	return true;
+}
+
+// 添加商品管理方法实现
+void HandleServer::handleAddProduct(QJsonObject body, qintptr port) {
+	qDebug() << "=== 添加商品请求 ===";
+	qDebug() << "请求数据:" << body;
+
+	// 验证必要字段
+	if (!body.contains("Product_name") || !body.contains("Product_price")) {
+		jsonResReady("2", QJsonArray(), port, "缺少必要的商品信息（商品名称和价格）！");
+		return;
+	}
+
+	QString productName = body.value("Product_name").toString().trimmed();
+	if (productName.isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "商品名称不能为空！");
+		return;
+	}
+
+	// 验证价格
+	bool ok;
+	int price = body.value("Product_price").toString().toInt(&ok);
+	if (!ok || price < 0) {
+		jsonResReady("2", QJsonArray(), port, "商品价格格式错误！");
+		return;
+	}
+
+	// 设置默认值
+	QJsonObject productData;
+	productData.insert("Product_name", productName);
+	productData.insert("Product_price", QString::number(price));
+
+	// 库存数量
+	if (body.contains("Product_amount")) {
+		int amount = body.value("Product_amount").toString().toInt(&ok);
+		productData.insert("Product_amount", QString::number(ok && amount >= 0 ? amount : 0));
+	}
+	else {
+		productData.insert("Product_amount", "0");
+	}
+
+	// 销量（默认为0）
+	productData.insert("Product_sales", "0");
+
+	// 商品分类
+	if (body.contains("Product_classification")) {
+		QString classification = body.value("Product_classification").toString().trimmed();
+		productData.insert("Product_classification", classification.isEmpty() ? "其他" : classification);
+	}
+	else {
+		productData.insert("Product_classification", "其他");
+	}
+
+	// 商品描述
+	if (body.contains("Product_about")) {
+		productData.insert("Product_about", body.value("Product_about").toString());
+	}
+	else {
+		productData.insert("Product_about", "");
+	}
+
+	// 是否限时商品
+	if (body.contains("Product_istimelimited")) {
+		QString timeLimit = body.value("Product_istimelimited").toString();
+		if (timeLimit != "是" && timeLimit != "否") {
+			timeLimit = "否";
+		}
+		productData.insert("Product_istimelimited", timeLimit);
+	}
+	else {
+		productData.insert("Product_istimelimited", "否");
+	}
+
+	// 商品图片地址
+	if (body.contains("Product_pictureaddress")) {
+		productData.insert("Product_pictureaddress", body.value("Product_pictureaddress").toString());
+	}
+	else {
+		productData.insert("Product_pictureaddress", "");
+	}
+
+	qDebug() << "处理后的商品数据:" << productData;
+
+	bool flag = sql->insertSth("products", productData);
+	if (flag) {
+		qDebug() << "商品添加成功:" << productName;
+
+		// 返回新添加的商品信息
+		QJsonObject queryObj;
+		queryObj.insert("want", "*");
+		queryObj.insert("restriction", QString("Product_name = '%1'").arg(productName.replace("'", "''")));
+		queryObj.insert("orderBy", "Product_id DESC");
+
+		QJsonArray result;
+		if (sql->selectSth("products", queryObj, result) && !result.isEmpty()) {
+			jsonResReady("1", result, port);
+		}
+		else {
+			jsonResReady("1", QJsonArray(), port);
+		}
+	}
+	else {
+		qDebug() << "商品添加失败";
+		jsonResReady("3", QJsonArray(), port, "添加商品失败！请检查数据格式。");
+	}
+}
+
+void HandleServer::handleUpdateProduct(QJsonObject body, qintptr port) {
+	qDebug() << "=== 更新商品请求 ===";
+	qDebug() << "请求数据:" << body;
+
+	if (!body.contains("restriction")) {
+		jsonResReady("2", QJsonArray(), port, "缺少更新条件！");
+		return;
+	}
+
+	QString restriction = body.value("restriction").toString();
+	if (restriction.trimmed().isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "更新条件不能为空！");
+		return;
+	}
+
+	// 验证要更新的数据
+	QJsonObject updateData = body;
+	updateData.remove("restriction"); // 移除条件字段
+
+	if (updateData.isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "没有要更新的数据！");
+		return;
+	}
+
+	// 数据验证
+	if (updateData.contains("Product_price")) {
+		bool ok;
+		int price = updateData.value("Product_price").toString().toInt(&ok);
+		if (!ok || price < 0) {
+			jsonResReady("2", QJsonArray(), port, "商品价格格式错误！");
+			return;
+		}
+	}
+
+	if (updateData.contains("Product_amount")) {
+		bool ok;
+		int amount = updateData.value("Product_amount").toString().toInt(&ok);
+		if (!ok || amount < 0) {
+			jsonResReady("2", QJsonArray(), port, "库存数量格式错误！");
+			return;
+		}
+	}
+
+	if (updateData.contains("Product_sales")) {
+		bool ok;
+		int sales = updateData.value("Product_sales").toString().toInt(&ok);
+		if (!ok || sales < 0) {
+			jsonResReady("2", QJsonArray(), port, "销量格式错误！");
+			return;
+		}
+	}
+
+	// 重新加入restriction
+	updateData.insert("restriction", restriction);
+
+	bool flag = sql->updateSth("products", updateData);
+	if (flag) {
+		qDebug() << "商品更新成功";
+		jsonResReady("1", QJsonArray(), port);
+	}
+	else {
+		qDebug() << "商品更新失败";
+		jsonResReady("3", QJsonArray(), port, "更新商品失败！请检查数据格式。");
+	}
+}
+
+void HandleServer::handleDeleteProduct(QJsonObject body, qintptr port) {
+	qDebug() << "=== 删除商品请求 ===";
+	qDebug() << "请求数据:" << body;
+
+	if (!body.contains("restriction")) {
+		jsonResReady("2", QJsonArray(), port, "缺少删除条件！");
+		return;
+	}
+
+	QString restriction = body.value("restriction").toString();
+	if (restriction.trimmed().isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "删除条件不能为空！");
+		return;
+	}
+
+	// 开始事务
+	if (!sql->beginTransaction()) {
+		jsonResReady("3", QJsonArray(), port, "开始事务失败！");
+		return;
+	}
+
+	try {
+		// 先检查商品是否存在
+		QJsonObject checkObj;
+		checkObj.insert("want", "Product_id, Product_name");
+		checkObj.insert("restriction", restriction);
+
+		QJsonArray existResult;
+		if (!sql->selectSth("products", checkObj, existResult) || existResult.isEmpty()) {
+			sql->rollbackTransaction();
+			jsonResReady("2", QJsonArray(), port, "要删除的商品不存在！");
+			return;
+		}
+
+		// 检查是否有相关的订单项（如果有，可能需要特殊处理）
+		for (const QJsonValue& value : existResult) {
+			QJsonObject product = value.toObject();
+			QString productId = product.value("Product_id").toString();
+
+			QJsonObject orderCheckObj;
+			orderCheckObj.insert("want", "COUNT(*) as count");
+			orderCheckObj.insert("restriction", QString("Orderitem_pro_id = %1").arg(productId));
+
+			QJsonArray orderResult;
+			if (sql->selectSth("orderitems", orderCheckObj, orderResult) && !orderResult.isEmpty()) {
+				int orderCount = orderResult[0].toObject().value("count").toString().toInt();
+				if (orderCount > 0) {
+					sql->rollbackTransaction();
+					jsonResReady("2", QJsonArray(), port,
+						QString("商品 '%1' 存在相关订单记录，无法删除！")
+						.arg(product.value("Product_name").toString()));
+					return;
+				}
+			}
+		}
+
+		// 执行删除
+		bool flag = sql->deleteSth("products", body);
+		if (flag) {
+			sql->commitTransaction();
+			qDebug() << "商品删除成功";
+			jsonResReady("1", QJsonArray(), port);
+		}
+		else {
+			sql->rollbackTransaction();
+			qDebug() << "商品删除失败";
+			jsonResReady("3", QJsonArray(), port, "删除商品失败！");
+		}
+	}
+	catch (...) {
+		sql->rollbackTransaction();
+		jsonResReady("3", QJsonArray(), port, "删除商品时发生异常！");
+	}
+}
+
+void HandleServer::handleGetAllProducts(QJsonObject body, qintptr port) {
+	qDebug() << "=== 获取所有商品请求 ===";
+	qDebug() << "请求数据:" << body;
+
+	QJsonObject queryObj;
+	queryObj.insert("want", "*");
+
+	// 如果有额外的查询条件，保留
+	if (body.contains("restriction")) {
+		queryObj.insert("restriction", body.value("restriction"));
+	}
+
+	// 排序
+	if (body.contains("orderBy")) {
+		queryObj.insert("orderBy", body.value("orderBy"));
+	}
+	else {
+		queryObj.insert("orderBy", "Product_id DESC"); // 默认按ID降序
+	}
+
+	QJsonArray result;
+	bool flag = sql->selectSth("products", queryObj, result);
+	if (flag) {
+		qDebug() << "查询到商品数量:" << result.size();
+		jsonResReady("1", result, port);
+	}
+	else {
+		qDebug() << "查询商品失败";
+		jsonResReady("3", QJsonArray(), port, "查询商品失败！");
+	}
 }

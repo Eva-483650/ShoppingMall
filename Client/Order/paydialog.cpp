@@ -81,7 +81,7 @@ void PayDialog::setupUI()
         }
 
         #finalPriceLabel {
-            font: bold 20pt "Microsoft YaHei";
+            font: bold 18pt "Microsoft YaHei";
             color: rgb(189, 170, 233);
             background: rgba(189, 170, 233, 15);
             padding: 15px 20px;

@@ -8,7 +8,7 @@ Server::Server(QObject *parent):QObject(parent)
     sqlserver->connectToDataBase();
 
     tcpserver = new TcpServer(parent);//tcpserver和会话窗口相连
-    tcpserver->listen(QHostAddress::Any,520);
+    tcpserver->listen(QHostAddress::Any,8080);
 
     handleserver = new HandleServer(sqlserver);
 

@@ -2,6 +2,10 @@
 #define SHOPPINGMANAGER_H
 
 #include <QWidget>
+#include <QSettings>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
+#include <QTimer>
 #include "slidenavigation.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -15,7 +19,9 @@
 #include <QPainter>
 #include<QJsonParseError>
 #include"person.h"
+
 extern QString FLAG_CHARACTER;
+
 namespace Ui {
 class ShoppingManager;
 }
@@ -36,12 +42,18 @@ public:
     bool getConnected();
     bool connectTo();
     bool disConnect();
-    void loadStyleSheet(const QString &styleSheetFile);
-
+	// 主题相关成员
+	bool m_isDarkMode;               // 黑夜模式状态
 public slots:
     void changePage(qintptr index);
     void someoneLogin(QJsonObject obj);
-    void changeStyle(int index);
+
+private slots:
+    void toggleDarkMode();           // 切换黑夜模式
+    void onThemeChanged(int index);  // 主题风格改变
+
+signals:
+    void themeChanged(bool isDarkMode);  // 主题改变信号
 
 private:
     Ui::ShoppingManager *ui;
@@ -52,10 +64,20 @@ private:
     qintptr server_port;//服务端端口
     Person *logined_user;
     bool isconnected;
+
+    
+
     void setServerIP(QString ip);
     void setServerPort(qintptr port);
     void closeEvent(QCloseEvent *event);
     bool connectToDataBase(QString SQLkind,QString ip,int port,QString dbname,QString username,QString password);
+
+    // 主题功能方法
+    void setupThemeToggle();         // 设置主题切换
+    void applyDarkMode(bool enabled); // 应用黑夜模式
+    void saveThemeSettings();        // 保存主题设置
+    void loadThemeSettings();        // 加载主题设置
+    void animateThemeTransition();   // 主题切换动画
 };
 
 #endif // SHOPPINGMANAGER_H

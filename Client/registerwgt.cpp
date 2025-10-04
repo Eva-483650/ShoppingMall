@@ -42,15 +42,6 @@ void RegisterWgt::paintEvent(QPaintEvent *ev) {
     if (!bg.isNull()) {
         p.drawPixmap(rect(), bg); // 自动拉伸填满
     }
-    // else {
-    //     // 兜底渐变
-    //     QLinearGradient g(rect().topLeft(), rect().bottomRight());
-    //     g.setColorAt(0, QColor("#efeafd"));
-    //     g.setColorAt(1, QColor("#c6b4ef"));
-    //     p.fillRect(rect(), g);
-    // }
-    // 可选叠加一层很淡的面纱：
-    // p.fillRect(rect(), QColor(255,255,255,40));
 }
 
 RegisterWgt::~RegisterWgt()
@@ -340,11 +331,25 @@ void RegisterWgt::onRegister()
         shake(ui->centralCard);
         return;
     }
-    // 合并之前两步校验，防止直接跳到最后
-    if (!validateStep0(&err)) { showInlineMessage("账号信息无效，请返回修改。"); return; }
 
-    if (!m_client || !m_client->getConnected()) {
-        QMessageBox::warning(this,"错误","未连接到网络！");
+    // 检查并建立连接
+    if (!m_client) {
+        QMessageBox::warning(this, "错误", "客户端未初始化！");
+        return;
+    }
+
+    // 如果未连接，尝试连接
+    if (!m_client->getConnected()) {
+        qDebug() << "检测到未连接，尝试建立连接...";
+        if (!m_client->connectTo()) {
+            QMessageBox::warning(this, "错误", "无法连接到服务器！");
+            return;
+        }
+    }
+
+    // 再次验证连接状态
+    if (!m_client->getConnected()) {
+        QMessageBox::warning(this, "错误", "网络连接失败！");
         return;
     }
 

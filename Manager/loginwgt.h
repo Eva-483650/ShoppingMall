@@ -7,10 +7,13 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
-#include "shoppingmanager.h"
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QKeyEvent>
+#include <QShowEvent>
+#include <QSettings>
+#include <QToolButton>
+#include "shoppingmanager.h"
 
 namespace Ui {
 class LoginWgt;
@@ -23,14 +26,24 @@ class LoginWgt : public QWidget
 public:
     explicit LoginWgt(ShoppingManager *p);
     ~LoginWgt();
+
     ShoppingManager *client;
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private:
     Ui::LoginWgt *ui;
-    void paintEvent(QPaintEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+
+    void setupManagerUI();
+    void saveManagerCredentials(const QString &username);
+    void loadSavedCredentials();
+
 private slots:
     void loginUser();
+
 signals:
     void signal_login(QJsonObject);
 };

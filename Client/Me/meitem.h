@@ -14,11 +14,11 @@ class MeItem : public QWidget
 public:
     explicit MeItem(QWidget *parent = nullptr);
     ~MeItem();
-    void setKey(QString);
-    void setVal(int);
-    void setVal(QString);
-    void setPic(QString);
 
+    void setKey(QString str);
+    void setVal(int num);
+    void setVal(QString str);
+    void setPic(QString picadd);
 
 private:
     Ui::MeItem *ui;

@@ -1,14 +1,17 @@
 #include "shoppingmanager.h"
 #include "ui_shoppingmanager.h"
 #include<QDebug>
+
 QString FLAG_CHARACTER = "2";//服务端标识
+
 ShoppingManager::ShoppingManager(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ShoppingManager)
+    ui(new Ui::ShoppingManager),
+    m_isDarkMode(false)  // 初始化黑夜模式状态
 {
     ui->setupUi(this);
-    QString style = ui->comboBox->currentText();
-    this->loadStyleSheet(QString(":/qss/%1.qss").arg(style));
+
+    // 设置侧边导航
     ui->SideNav->setBarRadious(5);
     ui->SideNav->setItemRadious(5);
     ui->SideNav->setItemStartColor(QColor(191, 65, 249));
@@ -22,10 +25,18 @@ ShoppingManager::ShoppingManager(QWidget *parent) :
     ui->SideNav->moveTo(0);
     ui->PageStack->setCurrentIndex(0);
 
+    // 设置页面管理器引用
     ui->ProductP->manager = this;
     ui->OrderP->manager = this;
     ui->ContactP->manager = this;
     ui->ProsessP->manager = this;
+
+    // 设置主题切换功能
+    setupThemeToggle();
+
+    // 加载保存的主题设置
+    loadThemeSettings();
+
     helpConnect();
     m_socket = new QTcpSocket();
     isconnected = false;
@@ -33,14 +44,134 @@ ShoppingManager::ShoppingManager(QWidget *parent) :
 
 ShoppingManager::~ShoppingManager()
 {
+    saveThemeSettings();  // 析构时保存设置
     delete ui;
 }
 
 void ShoppingManager::helpConnect(){
     connect(ui->SideNav,SIGNAL(itemClicked(qintptr,QString)),this,SLOT(changePage(qintptr)));
-    connect(ui->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(changeStyle(int)));
+
+    // 连接主题切换按钮（确保UI中有这个按钮）
+    if (ui->themeToggleBtn) {
+        connect(ui->themeToggleBtn, &QPushButton::clicked, this, &ShoppingManager::toggleDarkMode);
+    }
+
 }
 
+void ShoppingManager::setupThemeToggle()
+{
+    // 如果UI中没有主题切换按钮，这里可以动态创建或者忽略
+    // 主要逻辑在helpConnect中处理
+    qDebug() << "主题切换功能已设置";
+}
+
+void ShoppingManager::toggleDarkMode()
+{
+    m_isDarkMode = !m_isDarkMode;
+
+    qDebug() << "切换到" << (m_isDarkMode ? "黑夜模式" : "日间模式");
+
+    // 播放切换动画
+    animateThemeTransition();
+
+    // 延迟应用主题，让动画效果更明显
+    QTimer::singleShot(150, this, [this]() {
+        applyDarkMode(m_isDarkMode);
+        saveThemeSettings();
+    });
+}
+
+void ShoppingManager::applyDarkMode(bool enabled)
+{
+    // 设置属性用于CSS选择器
+    this->setProperty("darkMode", enabled);
+    if (ui->titleWidget) {
+        ui->titleWidget->setProperty("darkMode", enabled);
+    }
+    if (ui->themeToggleBtn) {
+        ui->themeToggleBtn->setProperty("darkMode", enabled);
+
+        // 更新按钮文本和图标
+        if (enabled) {
+            ui->themeToggleBtn->setText("☀️ 日间");
+            ui->themeToggleBtn->setToolTip("切换到日间模式");
+        } else {
+            ui->themeToggleBtn->setText("🌙 夜间");
+            ui->themeToggleBtn->setToolTip("切换到夜间模式");
+        }
+    }
+
+    // 强制刷新样式
+    this->style()->unpolish(this);
+    this->style()->polish(this);
+
+    if (ui->titleWidget) {
+        ui->titleWidget->style()->unpolish(ui->titleWidget);
+        ui->titleWidget->style()->polish(ui->titleWidget);
+    }
+
+    if (ui->themeToggleBtn) {
+        ui->themeToggleBtn->style()->unpolish(ui->themeToggleBtn);
+        ui->themeToggleBtn->style()->polish(ui->themeToggleBtn);
+    }
+
+    // 通知子页面更新主题
+    emit themeChanged(enabled);
+
+    qDebug() << "主题模式已应用:" << (enabled ? "黑夜模式" : "日间模式");
+}
+
+void ShoppingManager::animateThemeTransition()
+{
+    // 创建淡入淡出动画效果
+    auto *effect = new QGraphicsOpacityEffect(this);
+    this->setGraphicsEffect(effect);
+
+    auto *animation = new QPropertyAnimation(effect, "opacity", this);
+    animation->setDuration(300);
+    animation->setStartValue(1.0);
+    animation->setKeyValueAt(0.5, 0.7);
+    animation->setEndValue(1.0);
+    animation->setEasingCurve(QEasingCurve::InOutQuad);
+
+    connect(animation, &QPropertyAnimation::finished, this, [this]() {
+        this->setGraphicsEffect(nullptr);
+    });
+
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void ShoppingManager::saveThemeSettings()
+{
+    QSettings settings("EvaShoppingMall", "ManagerSettings");
+    settings.setValue("darkMode", m_isDarkMode);
+    qDebug() << "主题设置已保存:" << (m_isDarkMode ? "黑夜模式" : "日间模式");
+}
+
+void ShoppingManager::loadThemeSettings()
+{
+    QSettings settings("EvaShoppingMall", "ManagerSettings");
+    m_isDarkMode = settings.value("darkMode", false).toBool();
+    QString themeStyle = settings.value("themeStyle", "Ubuntu").toString();
+
+    // 应用保存的主题
+    applyDarkMode(m_isDarkMode);
+
+    qDebug() << "主题设置已加载:" << (m_isDarkMode ? "黑夜模式" : "日间模式");
+}
+
+void ShoppingManager::onThemeChanged(int index)
+{
+    ///QString themeName = ui->comboBox->itemText(index);
+    //qDebug() << "主题风格已更改为:" << themeName;
+
+    // 这里可以添加具体的主题风格切换逻辑
+    // 例如加载不同的CSS文件或调整特定样式
+
+    saveThemeSettings();
+}
+
+// 保持原有的其他方法不变
 void ShoppingManager::changePage(qintptr index){
     qintptr pagecount = ui->PageStack->count();
     if(index >= pagecount){
@@ -76,6 +207,7 @@ QSqlDatabase ShoppingManager::getDataBase(){
 
 void ShoppingManager::closeEvent(QCloseEvent *event){
     qDebug()<<"业务端窗口关闭";
+    saveThemeSettings(); // 关闭窗口时保存设置
     disConnect();
     return QWidget::closeEvent(event);
 }
@@ -90,7 +222,7 @@ void ShoppingManager::setServerPort(qintptr port){
 
 bool ShoppingManager::connectTo(){
     setServerIP("127.0.0.1");
-    setServerPort(520);//设80会成功=。=、因为自己电脑默认80是开的
+    setServerPort(8080);
     m_socket->connectToHost(server_IP,server_port);
     if(!m_socket->waitForConnected(3000)){
         qDebug()<<"连接服务器失败！";
@@ -101,7 +233,6 @@ bool ShoppingManager::connectTo(){
         qDebug()<<"连接服务器成功！";
         this->connectToDataBase("QMYSQL","127.0.0.1",3306,"ShoppingMall","root","chb20020309");
         isconnected = true;
-        //sendCHTTPMsg("10010",QJsonObject());
     }
     return true;
 }
@@ -117,8 +248,8 @@ bool ShoppingManager::disConnect(){
 
 QByteArray ShoppingManager::sendCHTTPMsg(QString CHTTP, QJsonObject jsonobj){
     QJsonObject content;
-    content.insert("head",QJsonValue(CHTTP));//设置报文头部
-    content.insert("body",QJsonValue(jsonobj));//设置报文内容
+    content.insert("head",QJsonValue(CHTTP));
+    content.insert("body",QJsonValue(jsonobj));
     QJsonDocument document;
     document.setObject(content);
     QByteArray arr = document.toJson();
@@ -135,10 +266,10 @@ QByteArray ShoppingManager::sendCHTTPMsg(QString CHTTP, QJsonObject jsonobj){
 
 QJsonArray ShoppingManager::parseResponse(QByteArray data){
     QJsonParseError jsonError;
-    QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);  // 转化为 JSON 文档
-    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {  // 解析未发生错误
-        if (doucment.isObject()) {  // JSON 文档为对象
-            QJsonObject object = doucment.object();  // 转化为对象
+    QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);
+    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {
+        if (doucment.isObject()) {
+            QJsonObject object = doucment.object();
             if (object.contains("head")) {
                 QString head = object.value("head").toString();
                 if(object.contains("result")){
@@ -157,10 +288,10 @@ QJsonArray ShoppingManager::parseResponse(QByteArray data){
 
 QString ShoppingManager::parseHead(QByteArray data){
     QJsonParseError jsonError;
-    QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);  // 转化为 JSON 文档
-    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {  // 解析未发生错误
-        if (doucment.isObject()) {  // JSON 文档为对象
-            QJsonObject object = doucment.object();  // 转化为对象
+    QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);
+    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {
+        if (doucment.isObject()) {
+            QJsonObject object = doucment.object();
             if (object.contains("head")) {
                 QString head = object.value("head").toString();
                 if(head[0] == "1"){
@@ -182,12 +313,12 @@ QString ShoppingManager::parseHead(QByteArray data){
 
 void ShoppingManager::error(QChar character, QString errmsg){
     if(character == '2'){
-       qDebug()<<errmsg;
-       QMessageBox::warning(nullptr,"客户端错误","客户端错误:"+errmsg);
+        qDebug()<<errmsg;
+        QMessageBox::warning(nullptr,"客户端错误","客户端错误:"+errmsg);
     }
     else if(character == '3'){
         qDebug()<<errmsg;
-       QMessageBox::warning(nullptr,"服务端错误","服务端错误:"+errmsg);
+        QMessageBox::warning(nullptr,"服务端错误","服务端错误:"+errmsg);
     }
 }
 
@@ -203,22 +334,4 @@ Person* ShoppingManager::getPerson(){
 
 bool ShoppingManager::getConnected(){
     return this->isconnected;
-}
-
-void ShoppingManager::loadStyleSheet(const QString &styleSheetFile){
-        QFile file(styleSheetFile);
-        file.open(QFile::ReadOnly);
-        if (file.isOpen()){
-            QString styleSheet = this->styleSheet();
-            styleSheet += QLatin1String(file.readAll());//读取样式表文件
-            this->setStyleSheet(styleSheet);//把文件内容传参
-            file.close();
-        }else{
-            QMessageBox::information(this,"tip","cannot find qss file");
-        }
-}
-
-void ShoppingManager::changeStyle(int index){
-    QString style = ui->comboBox->currentText();
-    this->loadStyleSheet(QString(":/qss/%1.qss").arg(style));
 }

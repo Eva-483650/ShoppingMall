@@ -47,6 +47,12 @@ private:
 	int calculateMerchantDiscount(const QJsonArray& products);
 	bool validateCouponUsage(int userId, int couponId, int orderAmount);
 
+    // ил╪р
+	void handleAddProduct(QJsonObject body, qintptr port);
+	void handleUpdateProduct(QJsonObject body, qintptr port);
+	void handleDeleteProduct(QJsonObject body, qintptr port);
+	void handleGetAllProducts(QJsonObject body, qintptr port);
+
 public slots:
     void handleRequest(const QString&,const qintptr, const QByteArray);
 signals:

@@ -6,35 +6,347 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>509</width>
-    <height>493</height>
+    <width>600</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>消息管理</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <property name="styleSheet">
+   <string notr="true">
+/* 主容器样式 */
+QWidget#ContactPage {
+    background: transparent;
+    font-family: &quot;微软雅黑&quot;;
+}
+
+/* 标题区域 */
+QWidget#headerWidget {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 rgba(161, 140, 209, 0.1),
+                stop:1 rgba(184, 164, 230, 0.1));
+    border-radius: 15px;
+    border: 1px solid rgba(161, 140, 209, 0.3);
+}
+
+QLabel#titleLabel {
+    color: #6c5b7b;
+    font: 700 20pt &quot;微软雅黑&quot;;
+    background: transparent;
+    border: none;
+}
+
+QLabel#subtitleLabel {
+    color: #8b78c4;
+    font: 12pt &quot;微软雅黑&quot;;
+    background: transparent;
+    border: none;
+}
+
+/* 消息显示区域 */
+QWidget#messageArea {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 201, 247, 0.8);
+}
+
+QTextEdit#messageDisplay {
+    background: transparent;
+    border: none;
+    font: 11pt &quot;微软雅黑&quot;;
+    color: #5a4c74;
+    selection-background-color: #e8e6fb;
+}
+
+QTextEdit#messageDisplay:focus {
+    border: none;
+    outline: none;
+}
+
+/* 输入区域 */
+QWidget#inputArea {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    border: 2px solid rgba(214, 201, 247, 0.6);
+}
+
+QWidget#inputArea:focus-within {
+    border: 2px solid #a18cd1;
+}
+
+QTextEdit#messageInput {
+    background: transparent;
+    border: none;
+    font: 11pt &quot;微软雅黑&quot;;
+    color: #5a4c74;
+    padding: 10px;
+}
+
+QTextEdit#messageInput:focus {
+    border: none;
+    outline: none;
+}
+
+/* 工具栏按钮 */
+QPushButton#toolButton {
+    background: rgba(194, 182, 243, 0.3);
+    border: 1px solid rgba(161, 140, 209, 0.5);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: 10pt &quot;微软雅黑&quot;;
+    color: #7a6599;
+    min-width: 60px;
+}
+
+QPushButton#toolButton:hover {
+    background: rgba(194, 182, 243, 0.5);
+    border: 1px solid #a18cd1;
+}
+
+QPushButton#toolButton:pressed {
+    background: rgba(194, 182, 243, 0.7);
+}
+
+/* 发送按钮 */
+QPushButton#sendButton {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #b8a4e6, stop:1 #a18cd1);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 30px;
+    font: 700 12pt &quot;微软雅黑&quot;;
+    min-width: 100px;
+}
+
+QPushButton#sendButton:hover {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #a18cd1, stop:1 #9179c4);
+}
+
+QPushButton#sendButton:pressed {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #9179c4, stop:1 #8066b7);
+}
+
+QPushButton#sendButton:disabled {
+    background: #d0d0d0;
+    color: #888888;
+}
+
+/* 在线状态指示器 */
+QLabel#statusIndicator {
+    background: #4CAF50;
+    border-radius: 6px;
+    min-width: 12px;
+    max-width: 12px;
+    min-height: 12px;
+    max-height: 12px;
+}
+
+QLabel#statusLabel {
+    color: #6c5b7b;
+    font: 10pt &quot;微软雅黑&quot;;
+    background: transparent;
+}
+
+/* 统计信息 */
+QLabel#statsLabel {
+    color: #8b78c4;
+    font: 9pt &quot;微软雅黑&quot;;
+    background: transparent;
+}
+
+/* 滚动条样式 */
+QScrollBar:vertical {
+    background: rgba(214, 201, 247, 0.3);
+    width: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(161, 140, 209, 0.6);
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #a18cd1;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QWidget" name="headerWidget" native="true">
      <property name="minimumSize">
       <size>
        <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
        <height>60</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QHBoxLayout" name="headerLayout">
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
       <item>
-       <widget class="QTextEdit" name="textEdit_2">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
+       <layout class="QVBoxLayout" name="titleLayout">
+        <property name="spacing">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="titleLabel">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;消息管理中心&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="subtitleLabel">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;与客户和团队成员实时沟通&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="headerSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="statusLayout">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="statusIndicator">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="statusLabel">
+          <property name="text">
+           <string>在线</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="messageArea" native="true">
+     <layout class="QVBoxLayout" name="messageLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>15</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>15</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="messageHeaderLayout">
+        <item>
+         <widget class="QLabel" name="messageHeaderLabel">
+          <property name="styleSheet">
+           <string notr="true">color: #6c5b7b; font: 600 12pt &quot;微软雅黑&quot;; background: transparent;</string>
+          </property>
+          <property name="text">
+           <string>消息记录</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="messageHeaderSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="statsLabel">
+          <property name="text">
+           <string>共 0 条消息</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="messageDisplay">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>暂无消息记录...</string>
         </property>
        </widget>
       </item>
@@ -42,44 +354,92 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget_2" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+    <widget class="QWidget" name="inputArea" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>150</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>180</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="inputLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>15</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>15</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
       <item>
-       <widget class="QTextEdit" name="textEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QTextEdit" name="messageInput">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>60</height>
+         </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>200</height>
+          <height>80</height>
          </size>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
         <property name="placeholderText">
-         <string>请输入您要发送的内容...</string>
+         <string>请输入您要发送的消息内容...</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>35</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>发送</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="controlLayout">
+        <item>
+         <spacer name="controlSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="sendButton">
+          <property name="minimumSize">
+           <size>
+            <width>160</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="toolTip">
+           <string>发送消息 (Ctrl+Enter)</string>
+          </property>
+          <property name="text">
+           <string>发送 📤</string>
+          </property>
+          <property name="shortcut">
+           <string>Ctrl+Return</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

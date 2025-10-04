@@ -11,10 +11,18 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>个人中心</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:#eee;</string>
+   <string notr="true">
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 rgba(252, 250, 255, 255),
+                stop:0.5 rgba(250, 247, 254, 255),
+                stop:1 rgba(248, 245, 253, 255));
+    font-family: "Microsoft YaHei";
+}
+   </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="leftMargin">
@@ -24,6 +32,9 @@
     <number>0</number>
    </property>
    <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -37,29 +48,79 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>120</height>
+       <height>140</height>
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:white;</string>
+      <string notr="true">
+QWidget {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(189, 170, 233, 255),
+                stop:0.3 rgba(195, 176, 238, 255),
+                stop:0.7 rgba(201, 182, 243, 255),
+                stop:1 rgba(207, 188, 248, 255));
+    border-radius: 0px;
+    box-shadow: 0px 2px 8px rgba(189, 170, 233, 0.12);
+}
+      </string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>20</number>
+      </property>
+      <property name="leftMargin">
+       <number>25</number>
+      </property>
+      <property name="topMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>25</number>
+      </property>
+      <property name="bottomMargin">
+       <number>20</number>
+      </property>
       <item>
-       <widget class="QWidget" name="widget_pic" native="true">
+       <widget class="QLabel" name="label_avatar">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>90</width>
-          <height>0</height>
+          <width>80</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>80</height>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">
+QLabel {
+    background: rgba(255, 255, 255, 200);
+    border: 2px solid rgba(255, 255, 255, 120);
+    border-radius: 40px;
+    box-shadow: 0px 3px 12px rgba(189, 170, 233, 0.15);
+}
+         </string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>:/images/login/avatar.jpg</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -72,20 +133,65 @@
          </sizepolicy>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>8</number>
+         </property>
          <property name="leftMargin">
-          <number>24</number>
+          <number>15</number>
+         </property>
+         <property name="topMargin">
+          <number>10</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>10</number>
          </property>
          <item>
           <widget class="QLabel" name="lab_name">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
-             <weight>75</weight>
+             <family>Microsoft YaHei</family>
+             <pointsize>18</pointsize>
              <bold>true</bold>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel {
+    font: bold 18pt "Microsoft YaHei";
+    color: rgba(255, 255, 255, 250);
+    background: transparent;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+}
+            </string>
+           </property>
            <property name="text">
             <string>用户名</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lab_welcome">
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QLabel {
+    font: 12pt "Microsoft YaHei";
+    color: rgba(255, 255, 255, 200);
+    background: transparent;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+            </string>
+           </property>
+           <property name="text">
+            <string>欢迎回来！</string>
            </property>
           </widget>
          </item>
@@ -104,8 +210,65 @@
       </sizepolicy>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
-</string>
+      <string notr="true">
+QListWidget {
+    background: rgba(255, 255, 255, 180);
+    border: none;
+    border-radius: 0px;
+    padding: 15px;
+    font: 12pt "Microsoft YaHei";
+    color: rgb(100, 90, 120);
+    outline: none;
+}
+
+QListWidget::item {
+    background: rgba(255, 255, 255, 220);
+    border: 1px solid rgba(189, 170, 233, 20);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 6px 0px;
+    color: rgb(85, 75, 105);
+}
+
+QListWidget::item:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(235, 230, 245, 180),
+                stop:1 rgba(230, 220, 240, 180));
+    border: 1px solid rgba(189, 170, 233, 50);
+    transform: translateY(-1px);
+    box-shadow: 0px 3px 12px rgba(189, 170, 233, 0.12);
+}
+
+QListWidget::item:selected {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(189, 170, 233, 80),
+                stop:1 rgba(201, 182, 243, 80));
+    border: 1px solid rgba(189, 170, 233, 100);
+    color: rgb(70, 60, 90);
+    font-weight: 600;
+}
+
+QScrollBar:vertical {
+    background: rgba(245, 242, 250, 200);
+    width: 10px;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(189, 170, 233, 100),
+                stop:1 rgba(201, 182, 243, 100));
+    border-radius: 5px;
+    min-height: 25px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 rgba(189, 170, 233, 130),
+                stop:1 rgba(201, 182, 243, 130));
+}
+      </string>
      </property>
     </widget>
    </item>

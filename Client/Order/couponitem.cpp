@@ -51,7 +51,7 @@ void CouponItem::setupUI()
     setStyleSheet("");
     setObjectName("");
 
-    setFixedHeight(160);
+    setFixedHeight(170);
     setMinimumWidth(380);
     setEnabled(true);
 
@@ -112,7 +112,7 @@ void CouponItem::setupUI()
     lab_couponName->setStyleSheet(R"(
         QLabel {
             font-family: "Microsoft YaHei", sans-serif;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: rgb(50, 50, 50);
             background: transparent;
@@ -126,7 +126,7 @@ void CouponItem::setupUI()
     lab_condition->setStyleSheet(R"(
         QLabel {
             font-family: "Microsoft YaHei", sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: rgb(80, 80, 80);
             background: transparent;
         }
@@ -139,7 +139,7 @@ void CouponItem::setupUI()
     lab_couponDesc->setStyleSheet(R"(
         QLabel {
             font-family: "Microsoft YaHei", sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: rgb(100, 100, 100);
             background: transparent;
         }

@@ -2,10 +2,12 @@
 #define MEPAGE_H
 
 #include <QWidget>
-#include"../shoppingclient.h"
-#include"../person.h"
-#include<QListWidget>
-#include<QListWidgetItem>
+#include "../shoppingclient.h"
+#include "../person.h"
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QPixmap>
+#include <QPainter>
 #include "meitem.h"
 
 namespace Ui {
@@ -20,12 +22,13 @@ public:
     explicit MePage(QWidget *parent = nullptr);
     ~MePage();
     ShoppingClient *client;
-    void addMeItem(QString key,QString val,QString pic_add="");
-    QMap<QString,MeItem*>infolist;
+    void addMeItem(QString key, QString val, QString pic_add="");
+    QMap<QString, MeItem*> infolist;
 
 private:
     Ui::MePage *ui;
     Person* someone;
+    void setUserAvatar(const QString &imagePath);
 
 private slots:
     void getSomeone(Person*);

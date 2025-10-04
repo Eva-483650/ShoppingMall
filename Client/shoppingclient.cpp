@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QDebug>
 
+
 QString FLAG_CHARACTER = "1";//客户端标识
 QString PIC_PATH = ":/images/";
 
@@ -36,6 +37,17 @@ ShoppingClient::ShoppingClient(QWidget* parent)
     helpConnect();
     isconnected = false;
     logined_user = nullptr;            // 再次显式，强调初始化
+
+    // 添加连接状态监控
+    connect(m_socket, &QTcpSocket::connected, this, [this]() {
+        isconnected = true;
+        qDebug() << "Socket 连接成功";
+    });
+
+    connect(m_socket, &QTcpSocket::disconnected, this, [this]() {
+        isconnected = false;
+        qDebug() << "Socket 连接断开";
+    });
 }
 
 ShoppingClient::~ShoppingClient()
@@ -89,7 +101,7 @@ void ShoppingClient::setServerPort(qintptr port) {
 
 bool ShoppingClient::connectTo() {
     setServerIP("127.0.0.1");
-    setServerPort(520);//设80会成功=。=、因为自己电脑默认80是开的
+    setServerPort(8080);//设80会成功=。=、因为自己电脑默认80是开的
 
     m_socket->connectToHost(server_IP, server_port);
     if (!m_socket->waitForConnected(3000)) {
@@ -245,5 +257,17 @@ Person* ShoppingClient::getPerson() {
 }
 
 bool ShoppingClient::getConnected() {
-    return  this->isconnected;
+    // 检查 socket 的实际状态
+    if (!m_socket) {
+        isconnected = false;
+        return false;
+    }
+
+    // 检查 socket 是否真的连接
+    if (m_socket->state() != QTcpSocket::ConnectedState) {
+        isconnected = false;
+        return false;
+    }
+
+    return isconnected;
 }

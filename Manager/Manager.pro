@@ -12,32 +12,32 @@ CONFIG += c++11
 
 SOURCES += \
     contactpage.cpp \
+    loginwgt.cpp \
     main.cpp \
     orderpage.cpp \
     productpage.cpp \
     prosesspage.cpp \
     shoppingmanager.cpp \
     slidenavigation.cpp \
-    loginwgt.cpp \
     person.cpp
 
 HEADERS += \
     contactpage.h \
+    loginwgt.h \
     orderpage.h \
     productpage.h \
     prosesspage.h \
     shoppingmanager.h \
     slidenavigation.h \
-    loginwgt.h \
     person.h
 
 FORMS += \
     contactpage.ui \
+    loginwgt.ui \
     orderpage.ui \
     productpage.ui \
     prosesspage.ui \
-    shoppingmanager.ui \
-    loginwgt.ui
+    shoppingmanager.ui
 
 TRANSLATIONS += \
     Manager_zh_CN.ts
