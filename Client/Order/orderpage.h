@@ -10,8 +10,10 @@
 #include <QStringList>
 #include <QListWidgetItem>
 #include <QMap>
+#include <QMessageBox>
 #include "paydialog.h"
 #include "couponselectdialog.h"
+#include "returndialog.h"
 
 namespace Ui {
     class OrderPage;
@@ -38,16 +40,20 @@ private slots:
     void nextOrder();
     void backOrder();
     void payCurrentOrder();  // 付款槽函数
+    void returnCurrentOrder();  // 新增退货槽函数
 
 private:
 
     int current;
     QPushButton* btn_pay;  // 在这里声明付款按钮，而不是在ui中
     Ui::OrderPage* ui;
+    QPushButton* btn_return;  // 新增退货按钮
+
     void showEvent(QShowEvent* event);
     void getAllOrder();
     void updateOrderItems(QString ordernum);
     QString formatOrderTime(const QString& rawTime);
+    void updateButtonsVisibility(const QString& status);  // 新增按钮可见性控制函数
 };
 
 #endif // ORDERPAGE_H

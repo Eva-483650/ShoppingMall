@@ -11,25 +11,15 @@ ShoppingManager::ShoppingManager(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 设置侧边导航
-    ui->SideNav->setBarRadious(5);
-    ui->SideNav->setItemRadious(5);
-    ui->SideNav->setItemStartColor(QColor(191, 65, 249));
-    ui->SideNav->setItemEndColor((QColor(187, 83, 217)));
-    ui->SideNav->setOrientation(Qt::Vertical);
-    ui->SideNav->addItem(tr("商品管理"));
-    ui->SideNav->addItem(tr("订单管理"));
-    ui->SideNav->addItem(tr("消息管理"));
-    ui->SideNav->addItem(tr("资产管理"));
-    ui->SideNav->setEnableKeyMove(true);
-    ui->SideNav->moveTo(0);
-    ui->PageStack->setCurrentIndex(0);
+    // 设置美化的侧边导航
+    setupSideNavigation();
 
-    // 设置页面管理器引用
+    // 设置页面管理器引用（去掉资产管理页面）
     ui->ProductP->manager = this;
     ui->OrderP->manager = this;
     ui->ContactP->manager = this;
-    ui->ProsessP->manager = this;
+    // 注释掉资产管理页面
+    // ui->ProsessP->manager = this;
 
     // 设置主题切换功能
     setupThemeToggle();
@@ -48,6 +38,71 @@ ShoppingManager::~ShoppingManager()
     delete ui;
 }
 
+void ShoppingManager::setupSideNavigation()
+{
+    // 设置导航栏基础样式
+    ui->SideNav->setBarRadious(8);
+    ui->SideNav->setItemRadious(8);
+
+    // 设置渐变色彩 - 更现代的紫色主题
+    ui->SideNav->setItemStartColor(QColor(139, 120, 196));  // 深紫色
+    ui->SideNav->setItemEndColor(QColor(184, 164, 230));    // 浅紫色
+
+    ui->SideNav->setOrientation(Qt::Vertical);
+
+    // 添加带图标的导航项
+    ui->SideNav->addItem("📦 " + tr("商品管理"));
+    ui->SideNav->addItem("📋 " + tr("订单管理"));
+    ui->SideNav->addItem("💬 " + tr("消息管理"));
+    // 移除资产管理项
+
+    ui->SideNav->setEnableKeyMove(true);
+    ui->SideNav->moveTo(0);
+    ui->PageStack->setCurrentIndex(0);
+
+    // 设置导航栏样式
+    ui->SideNav->setStyleSheet(
+        "QListWidget {"
+        "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
+        "                stop:0 rgba(161, 140, 209, 0.95),"
+        "                stop:1 rgba(106, 91, 123, 0.95));"
+        "    border: none;"
+        "    border-radius: 12px;"
+        "    padding: 10px;"
+        "    font-family: '微软雅黑';"
+        "    font-size: 11pt;"
+        "    font-weight: 600;"
+        "}"
+        "QListWidget::item {"
+        "    background: rgba(255, 255, 255, 0.1);"
+        "    border: 1px solid rgba(255, 255, 255, 0.2);"
+        "    border-radius: 8px;"
+        "    padding: 12px 16px;"
+        "    margin: 3px 0px;"
+        "    color: white;"
+        "    min-height: 20px;"
+        "}"
+        "QListWidget::item:hover {"
+        "    background: rgba(255, 255, 255, 0.2);"
+        "    border: 1px solid rgba(255, 255, 255, 0.4);"
+        "    transform: translateX(3px);"
+        "}"
+        "QListWidget::item:selected {"
+        "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+        "                stop:0 rgba(255, 255, 255, 0.3),"
+        "                stop:1 rgba(255, 255, 255, 0.1));"
+        "    border: 1px solid rgba(255, 255, 255, 0.5);"
+        "    color: white;"
+        "    font-weight: bold;"
+        "}"
+        "QListWidget::item:selected:hover {"
+        "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+        "                stop:0 rgba(255, 255, 255, 0.4),"
+        "                stop:1 rgba(255, 255, 255, 0.2));"
+        "}"
+        );
+}
+
 void ShoppingManager::helpConnect(){
     connect(ui->SideNav,SIGNAL(itemClicked(qintptr,QString)),this,SLOT(changePage(qintptr)));
 
@@ -55,7 +110,6 @@ void ShoppingManager::helpConnect(){
     if (ui->themeToggleBtn) {
         connect(ui->themeToggleBtn, &QPushButton::clicked, this, &ShoppingManager::toggleDarkMode);
     }
-
 }
 
 void ShoppingManager::setupThemeToggle()
@@ -101,6 +155,9 @@ void ShoppingManager::applyDarkMode(bool enabled)
         }
     }
 
+    // 根据主题模式更新导航栏样式
+    updateNavigationTheme(enabled);
+
     // 强制刷新样式
     this->style()->unpolish(this);
     this->style()->polish(this);
@@ -119,6 +176,97 @@ void ShoppingManager::applyDarkMode(bool enabled)
     emit themeChanged(enabled);
 
     qDebug() << "主题模式已应用:" << (enabled ? "黑夜模式" : "日间模式");
+}
+
+void ShoppingManager::updateNavigationTheme(bool darkMode)
+{
+    QString navStyle;
+
+    if (darkMode) {
+        // 夜间模式 - 深色主题
+        navStyle =
+            "QListWidget {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
+            "                stop:0 rgba(45, 45, 45, 0.95),"
+            "                stop:1 rgba(25, 25, 25, 0.95));"
+            "    border: 1px solid rgba(100, 100, 100, 0.3);"
+            "    border-radius: 12px;"
+            "    padding: 10px;"
+            "    font-family: '微软雅黑';"
+            "    font-size: 11pt;"
+            "    font-weight: 600;"
+            "}"
+            "QListWidget::item {"
+            "    background: rgba(70, 70, 70, 0.3);"
+            "    border: 1px solid rgba(100, 100, 100, 0.2);"
+            "    border-radius: 8px;"
+            "    padding: 12px 16px;"
+            "    margin: 3px 0px;"
+            "    color: #E0E0E0;"
+            "    min-height: 20px;"
+            "}"
+            "QListWidget::item:hover {"
+            "    background: rgba(100, 100, 100, 0.4);"
+            "    border: 1px solid rgba(150, 150, 150, 0.4);"
+            "    color: white;"
+            "}"
+            "QListWidget::item:selected {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+            "                stop:0 rgba(139, 120, 196, 0.6),"
+            "                stop:1 rgba(106, 91, 123, 0.6));"
+            "    border: 1px solid rgba(184, 164, 230, 0.5);"
+            "    color: white;"
+            "    font-weight: bold;"
+            "}"
+            "QListWidget::item:selected:hover {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+            "                stop:0 rgba(139, 120, 196, 0.8),"
+            "                stop:1 rgba(106, 91, 123, 0.8));"
+            "}";
+    } else {
+        // 日间模式 - 亮色主题
+        navStyle =
+            "QListWidget {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
+            "                stop:0 rgba(161, 140, 209, 0.95),"
+            "                stop:1 rgba(106, 91, 123, 0.95));"
+            "    border: none;"
+            "    border-radius: 12px;"
+            "    padding: 10px;"
+            "    font-family: '微软雅黑';"
+            "    font-size: 11pt;"
+            "    font-weight: 600;"
+            "}"
+            "QListWidget::item {"
+            "    background: rgba(255, 255, 255, 0.15);"
+            "    border: 1px solid rgba(255, 255, 255, 0.25);"
+            "    border-radius: 8px;"
+            "    padding: 12px 16px;"
+            "    margin: 3px 0px;"
+            "    color: white;"
+            "    min-height: 20px;"
+            "}"
+            "QListWidget::item:hover {"
+            "    background: rgba(255, 255, 255, 0.25);"
+            "    border: 1px solid rgba(255, 255, 255, 0.4);"
+            "    transform: translateX(2px);"
+            "}"
+            "QListWidget::item:selected {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+            "                stop:0 rgba(255, 255, 255, 0.35),"
+            "                stop:1 rgba(255, 255, 255, 0.15));"
+            "    border: 1px solid rgba(255, 255, 255, 0.6);"
+            "    color: white;"
+            "    font-weight: bold;"
+            "}"
+            "QListWidget::item:selected:hover {"
+            "    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,"
+            "                stop:0 rgba(255, 255, 255, 0.45),"
+            "                stop:1 rgba(255, 255, 255, 0.25));"
+            "}";
+    }
+
+    ui->SideNav->setStyleSheet(navStyle);
 }
 
 void ShoppingManager::animateThemeTransition()
@@ -171,16 +319,21 @@ void ShoppingManager::onThemeChanged(int index)
     saveThemeSettings();
 }
 
-// 保持原有的其他方法不变
+// 修改页面切换逻辑，适应去掉资产管理页面后的页面数量
 void ShoppingManager::changePage(qintptr index){
-    qintptr pagecount = ui->PageStack->count();
+    // 现在只有3个页面：商品管理(0)、订单管理(1)、消息管理(2)
+    qintptr pagecount = 3; // 减少页面数量
+
     if(index >= pagecount){
         ui->PageStack->setCurrentIndex(0);
     } else {
         ui->PageStack->setCurrentIndex(index);
     }
+
+    qDebug() << "切换到页面:" << index;
 }
 
+// 保持原有的其他方法不变
 bool ShoppingManager::connectToDataBase(QString SQLkind,QString ip,int port,QString dbname,QString username,QString password){
     if(QSqlDatabase::contains("qt_sql_default_connection")){
         db = QSqlDatabase::database("qt_sql_default_connection");
@@ -265,23 +418,53 @@ QByteArray ShoppingManager::sendCHTTPMsg(QString CHTTP, QJsonObject jsonobj){
 }
 
 QJsonArray ShoppingManager::parseResponse(QByteArray data){
+    qDebug() << "收到服务器原始数据:" << QString(data);
+
     QJsonParseError jsonError;
-    QJsonDocument doucment = QJsonDocument::fromJson(data, &jsonError);
-    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) {
-        if (doucment.isObject()) {
-            QJsonObject object = doucment.object();
+    QJsonDocument document = QJsonDocument::fromJson(data, &jsonError);
+
+    if (!document.isNull() && (jsonError.error == QJsonParseError::NoError)) {
+        if (document.isObject()) {
+            QJsonObject object = document.object();
+            qDebug() << "解析后的JSON对象:" << object;
+
             if (object.contains("head")) {
                 QString head = object.value("head").toString();
+                qDebug() << "响应头:" << head;
+
                 if(object.contains("result")){
                     QJsonValue result = object.value("result");
+                    qDebug() << "result字段类型:" << result.type();
+                    qDebug() << "result内容:" << result;
+
                     if(result.isArray()){
-                        return result.toArray();
+                        QJsonArray resultArray = result.toArray();
+                        qDebug() << "返回数组长度:" << resultArray.size();
+
+                        // 打印数组中的每个元素
+                        for(int i = 0; i < resultArray.size(); ++i) {
+                            qDebug() << "数组元素" << i << ":" << resultArray[i].toObject();
+                        }
+
+                        return resultArray;
+                    } else {
+                        qDebug() << "result不是数组类型，实际类型:" << result.type();
                     }
                     qDebug()<<"result:"<<object.value("result");
                 }
-                else{QMessageBox::warning(nullptr,tr("错误"),tr("接受数据错误！"));}
+                else{
+                    qDebug() << "响应中不包含result字段";
+                    qDebug() << "响应的所有字段:" << object.keys();
+                    QMessageBox::warning(nullptr,tr("错误"),tr("接受数据错误！"));
+                }
+            } else {
+                qDebug() << "响应中不包含head字段";
             }
+        } else {
+            qDebug() << "响应不是JSON对象";
         }
+    } else {
+        qDebug() << "JSON解析错误:" << jsonError.errorString();
     }
     return QJsonArray();
 }

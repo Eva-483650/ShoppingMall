@@ -5,7 +5,8 @@
 OrderPage::OrderPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::OrderPage),
-    btn_pay(nullptr)
+    btn_pay(nullptr),
+    btn_return(nullptr)  // 新增
 {
     ui->setupUi(this);
     this->current = 0;
@@ -89,20 +90,20 @@ OrderPage::~OrderPage()
 }
 
 
-void OrderPage::showEvent(QShowEvent* event) 
+void OrderPage::showEvent(QShowEvent* event)
 {
-	qDebug() << "OrderPage showEvent triggered";
-	getAllOrder();
-	qDebug() << "Order num after getAllOrder:" << orderlist.size();
+    qDebug() << "OrderPage showEvent triggered";
+    getAllOrder();
+    qDebug() << "Order num after getAllOrder:" << orderlist.size();
 
-	if (orderlist.isEmpty()) {
-		qDebug() << "No orders found for current user";
-		// 可以在UI上显示"暂无订单"的提示
-		ui->lab_status->setText("暂无订单");
-		ui->lab_price->setText("0");
-		ui->lab_time->setText("");
-		ui->lab_order->setText("");
-	}
+    if (orderlist.isEmpty()) {
+        qDebug() << "No orders found for current user";
+        // 可以在UI上显示"暂无订单"的提示
+        ui->lab_status->setText("暂无订单");
+        ui->lab_price->setText("0");
+        ui->lab_time->setText("");
+        ui->lab_order->setText("");
+    }
 }
 
 void OrderPage::getAllOrder() {
@@ -208,6 +209,8 @@ void OrderPage::updateOrderItems(QString ordernum) {
 
     QJsonObject order = orderlist.value(ordernum);
     QString status = order.value("Order_status").toString();
+    qDebug() << "Order status for" << ordernum << "is:" << status;
+    qDebug() << "Available order statuses for return button: 已付款, 已发货, 已收货, 交易完成, 已完成";
     ui->lab_status->setText(status);
     ui->lab_price->setText(order.value("Order_tolprice").toString());
 
@@ -221,10 +224,15 @@ void OrderPage::updateOrderItems(QString ordernum) {
 
     qDebug() << "Updated UI with order:" << ordernum << "Status:" << status;
 
+    // 更新按钮可见性
+     updateButtonsVisibility(status);
+}
 
+// 新增：控制按钮可见性的函数
+void OrderPage::updateButtonsVisibility(const QString& status) {
     // 根据订单状态显示/隐藏付款按钮
     if (status == "待付款") {
-        if (!btn_pay) {  // 注意这里改为 btn_pay，不是 ui->btn_pay
+        if (!btn_pay) {
             // 创建付款按钮（如果不存在）
             btn_pay = new QPushButton("立即付款", this);
             btn_pay->setStyleSheet(R"(
@@ -258,11 +266,60 @@ void OrderPage::updateOrderItems(QString ordernum) {
         btn_pay->show();
     }
     else {
-        if (btn_pay) {  // 注意这里也改为 btn_pay
+        if (btn_pay) {
             btn_pay->hide();
         }
     }
+
+    // 根据订单状态显示/隐藏退货按钮
+    if (status == "已付款" || status == "已发货" || status == "已收货" ||
+        status == "交易完成" || status == "已完成") {
+        if (!btn_return) {
+            // 创建退货按钮（如果不存在）
+            btn_return = new QPushButton("申请退货", this);
+            btn_return->setStyleSheet(R"(
+                QPushButton {
+                    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                stop:0 rgba(220, 53, 69, 255),
+                                stop:0.5 rgba(240, 73, 89, 255),
+                                stop:1 rgba(255, 93, 109, 255));
+                    border: 1px solid rgba(255, 255, 255, 90);
+                    border-radius: 18px;
+                    font: bold 12pt "Microsoft YaHei";
+                    color: white;
+                    padding: 8px 15px;
+                    min-width: 100px;
+                    min-height: 35px;
+                }
+                QPushButton:hover {
+                    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                stop:0 rgba(240, 73, 89, 255),
+                                stop:0.5 rgba(255, 93, 109, 255),
+                                stop:1 rgba(255, 113, 129, 255));
+                }
+                QPushButton:pressed {
+                    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+                                stop:0 rgba(200, 33, 49, 255),
+                                stop:0.5 rgba(220, 53, 69, 255),
+                                stop:1 rgba(240, 73, 89, 255));
+                }
+            )");
+
+            // 添加到布局中
+            ui->horizontalLayout_2->insertWidget(2, btn_return);
+
+            // 连接退货信号
+            connect(btn_return, &QPushButton::clicked, this, &OrderPage::returnCurrentOrder);
+        }
+        btn_return->show();
+    }
+    else {
+        if (btn_return) {
+            btn_return->hide();
+        }
+    }
 }
+
 
 QString OrderPage::formatOrderTime(const QString& rawTime) {
     // 处理不同的时间格式
@@ -426,4 +483,82 @@ void OrderPage::payCurrentOrder() {
         }
     }
     delete payDialog;
+}
+
+// 新增：退货功能实现
+void OrderPage::returnCurrentOrder() {
+    if (orderlist.isEmpty()) return;
+
+    QStringList keys = orderlist.keys();
+    if (current >= keys.size()) return;
+
+    QString orderKey = keys.at(current);
+    QJsonObject order = orderlist.value(orderKey);
+
+    QString orderId = order.value("Order_id").toString();
+    QString orderPrice = order.value("Order_tolprice").toString();
+
+    // 确保使用正确的订单号
+    QString currentDisplayedOrderId = ui->lab_order->text();
+    if (!currentDisplayedOrderId.isEmpty()) {
+        orderId = currentDisplayedOrderId;
+    }
+
+    qDebug() << "Initiating return for order:" << orderId;
+
+    // 创建退货对话框
+    ReturnDialog* returnDialog = new ReturnDialog(orderId, orderPrice, client, this);
+
+    if (returnDialog->exec() == QDialog::Accepted) {
+        // 发送退货请求 - 使用您的通信协议
+        qDebug() << "Sending return request for order:" << orderId;
+
+        QString FLAG_INSKIND = "04";
+        QString FLAG_INS = "07";  // 退货操作标识
+        QJsonObject obj;
+        obj.insert("order_id", orderId);
+        obj.insert("user_id", QString::number(client->getPerson()->getId()));
+        obj.insert("return_reason", returnDialog->getReturnReason());
+        obj.insert("return_type", returnDialog->getReturnType());
+        obj.insert("return_time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+        QByteArray data = client->sendCHTTPMsg(FLAG_CHARACTER + FLAG_INSKIND + FLAG_INS, obj);
+        QString flag = client->parseHead(data);
+
+        if (flag[0] == "1") {
+            QJsonArray result = client->parseResponse(data);
+            if (!result.isEmpty()) {
+                QJsonObject returnResult = result[0].toObject();
+                QString returnId = returnResult.value("return_id").toString();
+
+                QString successMsg = QString("退货申请提交成功！\n\n")
+                                     + QString("订单号：%1\n").arg(orderId)
+                                     + QString("退货单号：%1\n").arg(returnId)
+                                     + QString("退货类型：%1\n").arg(returnDialog->getReturnType())
+                                     + QString("退货原因：%1\n\n").arg(returnDialog->getReturnReason())
+                                     + QString("我们将在1-3个工作日内处理您的退货申请，请耐心等待。");
+
+                QMessageBox::information(this, "退货申请成功", successMsg);
+
+                // 刷新订单信息
+                getAllOrder();
+            } else {
+                QMessageBox::information(this, "退货申请成功",
+                                         QString("退货申请已提交！\n订单号：%1\n退货类型：%2\n\n我们将在1-3个工作日内处理您的申请。")
+                                             .arg(orderId).arg(returnDialog->getReturnType()));
+
+                // 刷新订单信息
+                getAllOrder();
+            }
+        }
+        else {
+            QString errorMsg = client->parseError(data);
+            if (errorMsg.isEmpty()) {
+                errorMsg = "退货申请提交失败，请稍后重试。";
+            }
+            QMessageBox::warning(this, "退货申请失败", errorMsg);
+        }
+    }
+
+    delete returnDialog;
 }

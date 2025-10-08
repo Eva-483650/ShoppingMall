@@ -6,6 +6,7 @@
 #include<QJsonObject>
 #include<QJsonDocument>
 #include<QJsonParseError>
+#include <QRandomGenerator>
 #include"sqlserver.h"
 #include"tcpserver.h"
 
@@ -16,6 +17,8 @@ public:
     HandleServer(SQLServer*);
     void jsonResReady(QString head,QJsonArray res,qintptr port,QString errmsg="");
     QString getRandomOrderNum();
+    QString getRandomReturnNum();  // æ–°å¢ï¼šç”Ÿæˆé€€è´§å•å·
+
 private:
     SQLServer *sql;
     TcpServer *tcp;
@@ -31,23 +34,29 @@ private:
     bool createOrderItems(QJsonArray wannabuy,QJsonObject map,QString ordernum);
     void handleSearchOrder(QJsonObject body,qintptr port);
     void handleSearchOrderItems(QJsonObject body,qintptr port);
-
-    // ¸¶¿îÂß¼­
+    void handleManagerSearchOrderItems(QJsonObject body, qintptr port);   // æ–°å¢ï¼šç®¡ç†å‘˜è®¢å•è¯¦æƒ…æŸ¥è¯¢
+    void handleUpdateOrderStatus(QJsonObject body, qintptr port);
+    // ä»˜æ¬¾é€»è¾‘
     void handlePayOrder(QJsonObject body, qintptr port);
 
-    //ÓÅ»İÈ¯Âß¼­
-	// ÔÚ HandleServer ÀàµÄ private ²¿·ÖÌí¼Ó
+	// é€€è´§é€»è¾‘ - æ–°å¢
+	void handleReturnOrder(QJsonObject body, qintptr port);
+	void handleGetReturnList(QJsonObject body, qintptr port);
+	void handleUpdateReturnStatus(QJsonObject body, qintptr port);
+    
+    //ä¼˜æƒ åˆ¸é€»è¾‘
+	// åœ¨ HandleServer ç±»çš„ private éƒ¨åˆ†æ·»åŠ 
 	void handleGetUserCoupons(QJsonObject body, qintptr port);
 	void handleUseCoupon(QJsonObject body, qintptr port);
 	void handleGetMerchantDiscounts(QJsonObject body, qintptr port);
 	void handleCalculateOrderPrice(QJsonObject body, qintptr port);
 
-	// ¸¨Öúº¯Êı
+	// è¾…åŠ©å‡½æ•°
 	int calculateCouponDiscount(int couponId, int orderAmount, int userId);
 	int calculateMerchantDiscount(const QJsonArray& products);
 	bool validateCouponUsage(int userId, int couponId, int orderAmount);
 
-    // ÉÌ¼Ò
+    // å•†å®¶
 	void handleAddProduct(QJsonObject body, qintptr port);
 	void handleUpdateProduct(QJsonObject body, qintptr port);
 	void handleDeleteProduct(QJsonObject body, qintptr port);

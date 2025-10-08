@@ -78,6 +78,9 @@ private:
     void saveThemeSettings();        // 保存主题设置
     void loadThemeSettings();        // 加载主题设置
     void animateThemeTransition();   // 主题切换动画
+
+    void setupSideNavigation();
+    void updateNavigationTheme(bool darkMode);
 };
 
 #endif // SHOPPINGMANAGER_H

@@ -392,13 +392,13 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
         <property name="font">
          <font>
           <family>Microsoft YaHei UI</family>
-          <pointsize>9</pointsize>
+          <pointsize>8</pointsize>
           <italic>false</italic>
           <bold>false</bold>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 9pt &quot;Microsoft YaHei UI&quot;;</string>
+         <string notr="true">font: 8pt &quot;Microsoft YaHei UI&quot;;</string>
         </property>
         <property name="placeholderText">
          <string>搜索商品名称、分类或ID...</string>

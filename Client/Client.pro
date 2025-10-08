@@ -29,6 +29,7 @@ SOURCES += \
     Order/couponitem.cpp \
     Order/couponselectdialog.cpp \
     Order/paydialog.cpp \
+    Order/returndialog.cpp \
         main.cpp \
     shoppingclient.cpp \
     slidenavigation.cpp\
@@ -56,6 +57,7 @@ HEADERS += \
     Order/couponitem.h \
     Order/couponselectdialog.h \
     Order/paydialog.h \
+    Order/returndialog.h \
     shoppingclient.h \
     slidenavigation.h\
     Cart/cartpage.h \

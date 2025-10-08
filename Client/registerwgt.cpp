@@ -49,8 +49,6 @@ RegisterWgt::~RegisterWgt()
     delete ui;
 }
 
-/* ================= 初始化 ================= */
-
 void RegisterWgt::initUi()
 {
     // 给三个圆点打上样式 class

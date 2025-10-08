@@ -49,11 +49,12 @@ void HandleServer::handleRequest(const QString& ip, const qintptr port, const QB
 					break;
 				case 2: // 商品操作
 					switch (flag_ins) {
-					case 1: handleAddProduct(body, port); break;      // 协议码 20101
-					case 2: handleUpdateProduct(body, port); break;   // 协议码 20102  
-					case 3: handleDeleteProduct(body, port); break;   // 协议码 20103
-					case 4: handleSearchProduct(body, port); break;   // 协议码 20104（已存在）
-					case 6: handleGetAllProducts(body, port); break;  // 协议码 20106
+					case 1: handleAddProduct(body, port); break;      // 协议码 X0201
+					case 2: handleUpdateProduct(body, port); break;   // 协议码 X0202  
+					case 3: handleDeleteProduct(body, port); break;   // 协议码 X0203
+					case 4: handleSearchProduct(body, port); break;   // 协议码 X0204
+					case 5: handleBuySth(body, port); break;          // 协议码 X0205 - 添加这一行
+					case 6: handleGetAllProducts(body, port); break;  // 协议码 X0206
 					default: jsonResReady("2", QJsonArray(), port, "未知商品操作"); break;
 					}
 					break;
@@ -71,6 +72,11 @@ void HandleServer::handleRequest(const QString& ip, const qintptr port, const QB
 					case 4: handleSearchOrder(body, port); break;
 					case 5: handleSearchOrderItems(body, port); break;
 					case 6: handlePayOrder(body, port); break;  // 新增付款处理
+					case 7: handleReturnOrder(body, port); break;        // 新增：申请退货
+					case 8: handleGetReturnList(body, port); break;      // 新增：获取退货列表
+					case 9: handleUpdateReturnStatus(body, port); break; // 新增：更新退货状态
+					case 10: handleManagerSearchOrderItems(body, port); break;   // 新增：管理员订单详情查询
+					case 11: handleUpdateOrderStatus(body, port); break;    // 新增：修改订单状态
 					default: jsonResReady("2", QJsonArray(), port, "未知订单操作"); break;
 					}
 					break;
@@ -150,7 +156,6 @@ void HandleServer::handleRegister(QJsonObject body, qintptr port) {
 		dbBody.insert("User_email", body.value("user_email"));
 
 	// 完全不处理 Newsletter 字段，让数据库使用默认值
-
 	qDebug() << "准备插入的数据:" << dbBody;
 
 	// 检查用户名重复
@@ -515,7 +520,8 @@ void HandleServer::handleSearchOrder(QJsonObject body, qintptr port) {
 	}
 }
 
-void HandleServer::handleSearchOrderItems(QJsonObject body, qintptr port) {
+void HandleServer::handleSearchOrderItems(QJsonObject body, qintptr port) 
+{
 	QJsonArray result;
 	bool flag = sql->selectSth("orders,orderitems,products", body, result);
 	qDebug() << "orderitems num:" << result.size();
@@ -525,6 +531,85 @@ void HandleServer::handleSearchOrderItems(QJsonObject body, qintptr port) {
 
 	if (flag) jsonResReady("1", result, port);
 	else jsonResReady("3", QJsonArray(), port, "查询订单信息失败！");
+}
+
+
+// 新增：管理员查询订单详情（不包含orders表，避免笛卡尔积）
+void HandleServer::handleManagerSearchOrderItems(QJsonObject body, qintptr port) {
+	QJsonArray result;
+
+	// 只查询 orderitems 和 products 表，避免与orders表产生笛卡尔积
+	bool flag = sql->selectSth("orderitems,products", body, result);
+
+	qDebug() << "管理员查询订单项数量:" << result.size();
+	qDebug() << "查询条件:" << body.value("restriction").toString();
+
+	if (flag) {
+		qDebug() << "管理员订单详情查询成功，返回结果:" << result;
+		jsonResReady("1", result, port);
+	}
+	else {
+		qDebug() << "管理员订单详情查询失败";
+		jsonResReady("3", QJsonArray(), port, "查询订单详情失败！");
+	}
+}
+
+// 新增：管理员修改订单状态
+void HandleServer::handleUpdateOrderStatus(QJsonObject body, qintptr port) {
+	qDebug() << "收到修改订单状态请求:" << body;
+
+	// 验证必要参数
+	if (!body.contains("orderId") || !body.contains("newStatus")) {
+		jsonResReady("2", QJsonArray(), port, "缺少必要参数：orderId 或 newStatus！");
+		return;
+	}
+
+	QString orderId = body.value("orderId").toString();
+	QString newStatus = body.value("newStatus").toString();
+
+	// 验证订单ID不为空
+	if (orderId.isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "订单ID不能为空！");
+		return;
+	}
+
+	// 验证状态值
+	QStringList validStatuses = { "待付款", "已付款", "已发货", "已完成", "已取消", "申请退货", "退货中", "已退货" };
+	if (!validStatuses.contains(newStatus)) {
+		jsonResReady("2", QJsonArray(), port, QString("无效的订单状态：%1").arg(newStatus));
+		return;
+	}
+
+	// 构建更新参数对象
+	QJsonObject updateObj;
+	updateObj.insert("Order_status", newStatus);  // 要更新的字段
+	updateObj.insert("restriction", QString("Order_id = '%1'").arg(orderId));  // WHERE条件
+
+	qDebug() << "准备更新订单状态:";
+	qDebug() << "  表名: orders";
+	qDebug() << "  更新字段: Order_status =>" << newStatus;
+	qDebug() << "  WHERE条件:" << QString("Order_id = '%1'").arg(orderId);
+
+	// 调用updateSth函数
+	bool flag = sql->updateSth("orders", updateObj);
+
+	if (flag) {
+		qDebug() << "订单状态更新成功:" << orderId << "=>" << newStatus;
+
+		// 构建成功响应
+		QJsonArray result;
+		QJsonObject resultObj;
+		resultObj.insert("orderId", orderId);
+		resultObj.insert("newStatus", newStatus);
+		resultObj.insert("updateTime", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+		result.append(resultObj);
+
+		jsonResReady("1", result, port);
+	}
+	else {
+		qDebug() << "订单状态更新失败:" << orderId;
+		jsonResReady("3", QJsonArray(), port, QString("更新订单状态失败！订单ID: %1").arg(orderId));
+	}
 }
 
 // 添加付款处理函数
@@ -1051,7 +1136,6 @@ int HandleServer::calculateMerchantDiscount(const QJsonArray& products) {
 }
 
 // 辅助函数：验证优惠券是否可用
-// 辅助函数：验证优惠券是否可用
 bool HandleServer::validateCouponUsage(int userId, int couponId, int orderAmount) {
 	qDebug() << "=== validateCouponUsage 调试 ===";
 	qDebug() << "userId:" << userId << "couponId:" << couponId << "orderAmount:" << orderAmount;
@@ -1453,5 +1537,335 @@ void HandleServer::handleGetAllProducts(QJsonObject body, qintptr port) {
 	else {
 		qDebug() << "查询商品失败";
 		jsonResReady("3", QJsonArray(), port, "查询商品失败！");
+	}
+}
+
+// 生成随机退货单号
+QString HandleServer::getRandomReturnNum()
+{
+	QString str = "RET";
+	for (int i = 0; i < 12; ++i) {
+		int n = QRandomGenerator::global()->bounded(10); // 0~9
+		str.append(QChar('0' + n));
+	}
+	return str;
+}
+
+// 处理退货申请 - 协议码 X0407
+// 处理退货申请 - 协议码 X0407
+void HandleServer::handleReturnOrder(QJsonObject body, qintptr port) {
+	qDebug() << "处理退货申请:" << body;
+
+	if (!body.contains("order_id") || !body.contains("user_id") ||
+		!body.contains("return_reason") || !body.contains("return_type")) {
+		jsonResReady("2", QJsonArray(), port, "退货申请缺少必要参数！");
+		return;
+	}
+
+	QString orderId = body.value("order_id").toString();
+	int userId = body.value("user_id").toString().toInt();
+	QString returnReason = body.value("return_reason").toString();
+	QString returnType = body.value("return_type").toString();
+	QString returnTime = body.value("return_time").toString();
+
+	// 验证订单是否存在且属于该用户
+	QJsonObject orderQuery;
+	orderQuery.insert("want", "Order_id, Order_user_id, Order_tolprice, Order_status");
+	orderQuery.insert("restriction", QString("Order_id = '%1' AND Order_user_id = %2")
+		.arg(orderId).arg(userId));
+
+	QJsonArray orderResult;
+	if (!sql->selectSth("orders", orderQuery, orderResult)) {
+		jsonResReady("3", QJsonArray(), port, "查询订单信息失败！");
+		return;
+	}
+
+	if (orderResult.isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "订单不存在或不属于当前用户！");
+		return;
+	}
+
+	QJsonObject orderInfo = orderResult[0].toObject();
+	QString orderStatus = orderInfo.value("Order_status").toString();
+
+	// 添加调试信息，查看实际的订单状态
+	qDebug() << "查询到的订单状态:" << orderStatus;
+	qDebug() << "订单ID:" << orderId << "用户ID:" << userId;
+
+	// 修改状态检查逻辑 - 允许更多状态申请退货
+	QStringList allowedStatuses = { "已付款", "已发货", "已收货", "交易完成", "已完成" };
+
+	if (!allowedStatuses.contains(orderStatus)) {
+		QString errorMsg = QString("当前订单状态'%1'不允许申请退货！允许的状态：%2")
+			.arg(orderStatus)
+			.arg(allowedStatuses.join("、"));
+		qDebug() << errorMsg;
+		jsonResReady("2", QJsonArray(), port, errorMsg);
+		return;
+	}
+
+	// 检查是否已经申请过退货
+	QJsonObject returnCheckQuery;
+	returnCheckQuery.insert("want", "Return_id");
+	returnCheckQuery.insert("restriction", QString("Return_order_id = '%1' AND Return_status NOT IN ('审核拒绝', '已完成')")
+		.arg(orderId));
+
+	QJsonArray returnCheckResult;
+	if (sql->selectSth("returns", returnCheckQuery, returnCheckResult)) {
+		if (!returnCheckResult.isEmpty()) {
+			jsonResReady("2", QJsonArray(), port, "该订单已申请退货，请勿重复申请！");
+			return;
+		}
+	}
+
+	// 开始事务
+	if (!sql->beginTransaction()) {
+		jsonResReady("3", QJsonArray(), port, "开始事务失败！");
+		return;
+	}
+
+	try {
+		// 生成退货单号
+		QString returnId = getRandomReturnNum();
+
+		// 插入退货记录
+		QJsonObject returnData;
+		returnData.insert("Return_id", returnId);
+		returnData.insert("Return_order_id", orderId);
+		returnData.insert("Return_user_id", QString::number(userId));
+		returnData.insert("Return_type", returnType);
+		returnData.insert("Return_reason", returnReason);
+		returnData.insert("Return_amount", orderInfo.value("Order_tolprice"));
+		returnData.insert("Return_status", "待审核");
+		if (!returnTime.isEmpty()) {
+			returnData.insert("Return_apply_time", returnTime);
+		}
+
+		qDebug() << "准备插入退货记录:" << returnData;
+
+		if (!sql->insertSth("returns", returnData)) {
+			sql->rollbackTransaction();
+			jsonResReady("3", QJsonArray(), port, "插入退货记录失败！");
+			return;
+		}
+
+		// 更新订单状态
+		QJsonObject orderUpdate;
+		orderUpdate.insert("Order_status", "申请退货");
+		orderUpdate.insert("restriction", QString("Order_id = '%1'").arg(orderId));
+
+		qDebug() << "准备更新订单状态:" << orderUpdate;
+
+		if (!sql->updateSth("orders", orderUpdate)) {
+			sql->rollbackTransaction();
+			jsonResReady("3", QJsonArray(), port, "更新订单状态失败！");
+			return;
+		}
+
+		// 提交事务
+		if (!sql->commitTransaction()) {
+			jsonResReady("3", QJsonArray(), port, "提交事务失败！");
+			return;
+		}
+
+		// 返回成功结果
+		QJsonArray result;
+		QJsonObject resultObj;
+		resultObj.insert("return_id", returnId);
+		resultObj.insert("order_id", orderId);
+		resultObj.insert("return_type", returnType);
+		resultObj.insert("return_status", "待审核");
+		result.append(resultObj);
+
+		jsonResReady("1", result, port);
+		qDebug() << "退货申请处理成功，退货单号:" << returnId;
+
+	}
+	catch (...) {
+		sql->rollbackTransaction();
+		jsonResReady("3", QJsonArray(), port, "退货申请处理异常！");
+	}
+}
+
+// 获取退货列表 - 协议码 X0408
+void HandleServer::handleGetReturnList(QJsonObject body, qintptr port) {
+	qDebug() << "获取退货列表:" << body;
+
+	QJsonObject query;
+	QString whereClause = "";
+
+	// 根据用户ID或管理员权限查询
+	if (body.contains("user_id")) {
+		int userId = body.value("user_id").toString().toInt();
+		whereClause = QString("returns.Return_user_id = %1").arg(userId);
+	}
+
+	// 如果是管理员查询，可以查看所有退货记录
+	if (body.contains("admin_mode") && body.value("admin_mode").toString() == "true") {
+		whereClause = "1=1"; // 查询所有记录
+	}
+
+	// 可以根据状态筛选
+	if (body.contains("status")) {
+		QString status = body.value("status").toString();
+		if (!whereClause.isEmpty()) {
+			whereClause += " AND ";
+		}
+		whereClause += QString("returns.Return_status = '%1'").arg(status);
+	}
+
+	// 联合查询，获取订单和用户信息
+	query.insert("want", "returns.Return_id, returns.Return_order_id, returns.Return_user_id, "
+		"returns.Return_type, returns.Return_reason, returns.Return_amount, "
+		"returns.Return_status, returns.Return_apply_time, returns.Return_process_time, "
+		"returns.Return_admin_note, orders.Order_time, users.User_name");
+
+	if (!whereClause.isEmpty()) {
+		whereClause += " AND returns.Return_order_id = orders.Order_id AND returns.Return_user_id = users.User_id";
+		query.insert("restriction", whereClause);
+	}
+	else {
+		query.insert("restriction", "returns.Return_order_id = orders.Order_id AND returns.Return_user_id = users.User_id");
+	}
+
+	query.insert("orderBy", "returns.Return_apply_time DESC");
+
+	QJsonArray result;
+	if (sql->selectSth("returns, orders, users", query, result)) {
+		jsonResReady("1", result, port);
+		qDebug() << "获取退货列表成功，共" << result.size() << "条记录";
+	}
+	else {
+		jsonResReady("3", QJsonArray(), port, "查询退货列表失败！");
+	}
+}
+
+// 更新退货状态（管理员功能）- 协议码 X0409
+void HandleServer::handleUpdateReturnStatus(QJsonObject body, qintptr port) {
+	qDebug() << "更新退货状态:" << body;
+
+	if (!body.contains("return_id") || !body.contains("new_status")) {
+		jsonResReady("2", QJsonArray(), port, "更新退货状态缺少必要参数！");
+		return;
+	}
+
+	QString returnId = body.value("return_id").toString();
+	QString newStatus = body.value("new_status").toString();
+	QString adminNote = body.contains("admin_note") ? body.value("admin_note").toString() : "";
+
+	// 验证退货记录是否存在
+	QJsonObject returnQuery;
+	returnQuery.insert("want", "Return_id, Return_order_id, Return_amount, Return_user_id");
+	returnQuery.insert("restriction", QString("Return_id = '%1'").arg(returnId));
+
+	QJsonArray returnResult;
+	if (!sql->selectSth("returns", returnQuery, returnResult)) {
+		jsonResReady("3", QJsonArray(), port, "查询退货记录失败！");
+		return;
+	}
+
+	if (returnResult.isEmpty()) {
+		jsonResReady("2", QJsonArray(), port, "退货记录不存在！");
+		return;
+	}
+
+	QJsonObject returnInfo = returnResult[0].toObject();
+
+	// 开始事务
+	if (!sql->beginTransaction()) {
+		jsonResReady("3", QJsonArray(), port, "开始事务失败！");
+		return;
+	}
+
+	try {
+		// 更新退货状态
+		QJsonObject returnUpdate;
+		returnUpdate.insert("Return_status", newStatus);
+		returnUpdate.insert("Return_process_time", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+		if (!adminNote.isEmpty()) {
+			returnUpdate.insert("Return_admin_note", adminNote);
+		}
+		returnUpdate.insert("restriction", QString("Return_id = '%1'").arg(returnId));
+
+		if (!sql->updateSth("returns", returnUpdate)) {
+			sql->rollbackTransaction();
+			jsonResReady("3", QJsonArray(), port, "更新退货状态失败！");
+			return;
+		}
+
+		// 根据新状态更新订单状态
+		QString orderStatus = "";
+		if (newStatus == "审核通过") {
+			orderStatus = "退货中";
+		}
+		else if (newStatus == "已退款" || newStatus == "已完成") {
+			orderStatus = "已退货";
+		}
+		else if (newStatus == "审核拒绝") {
+			orderStatus = "已完成"; // 拒绝退货，恢复为完成状态
+		}
+
+		if (!orderStatus.isEmpty()) {
+			QJsonObject orderUpdate;
+			orderUpdate.insert("Order_status", orderStatus);
+			orderUpdate.insert("restriction", QString("Order_id = '%1'").arg(returnInfo.value("Return_order_id").toString()));
+
+			if (!sql->updateSth("orders", orderUpdate)) {
+				sql->rollbackTransaction();
+				jsonResReady("3", QJsonArray(), port, "更新订单状态失败！");
+				return;
+			}
+		}
+
+		// 如果是退款完成，需要更新用户余额
+		if (newStatus == "已退款") {
+			int refundAmount = returnInfo.value("Return_amount").toString().toInt();
+			int userId = returnInfo.value("Return_user_id").toString().toInt();
+
+			// 查询用户当前余额
+			QJsonObject userQuery;
+			userQuery.insert("want", "User_money");
+			userQuery.insert("restriction", QString("User_id = %1").arg(userId));
+
+			QJsonArray userResult;
+			if (sql->selectSth("users", userQuery, userResult)) {
+				if (!userResult.isEmpty()) {
+					int currentMoney = userResult[0].toObject().value("User_money").toString().toInt();
+					int newMoney = currentMoney + refundAmount;
+
+					QJsonObject userUpdate;
+					userUpdate.insert("User_money", QString::number(newMoney));
+					userUpdate.insert("restriction", QString("User_id = %1").arg(userId));
+
+					if (!sql->updateSth("users", userUpdate)) {
+						sql->rollbackTransaction();
+						jsonResReady("3", QJsonArray(), port, "更新用户余额失败！");
+						return;
+					}
+				}
+			}
+		}
+
+		// 提交事务
+		if (!sql->commitTransaction()) {
+			jsonResReady("3", QJsonArray(), port, "提交事务失败！");
+			return;
+		}
+
+		// 返回成功结果
+		QJsonArray result;
+		QJsonObject resultObj;
+		resultObj.insert("return_id", returnId);
+		resultObj.insert("new_status", newStatus);
+		resultObj.insert("message", "退货状态更新成功");
+		result.append(resultObj);
+
+		jsonResReady("1", result, port);
+		qDebug() << "退货状态更新成功:" << returnId << "新状态:" << newStatus;
+
+	}
+	catch (...) {
+		sql->rollbackTransaction();
+		jsonResReady("3", QJsonArray(), port, "更新退货状态异常！");
 	}
 }

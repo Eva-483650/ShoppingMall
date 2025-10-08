@@ -3,136 +3,116 @@
 
 #include <QWidget>
 #include <QStandardItemModel>
-#include <QMessageBox>
-#include <QShowEvent>
-#include <QTimer>
-#include <QDebug>
-#include <QKeyEvent>
-#include <QItemSelectionModel>
-#include <QModelIndexList>
-#include <QHeaderView>
-#include <QAbstractItemView>
-#include <QProgressDialog>
-#include <QApplication>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-#include <QStandardItem>
-#include <QComboBox>
-#include <QSpinBox>
-#include <QLineEdit>
-#include <QTextEdit>
 #include <QScrollArea>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
-#include <algorithm>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QPixmap>
-#include <QTimer>
-#include "shoppingmanager.h"
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMessageBox>
+#include <QDialog>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QSpinBox>
+#include <QGridLayout>
+#include <QKeyEvent>
+#include <QDir>
+#include "../shoppingmanager.h"
+#include "customcombobox.h"
+#include "customspinbox.h"
 
-namespace Ui {
-	class ProductPage;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class ProductPage; }
+QT_END_NAMESPACE
 
 class ProductPage : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	explicit ProductPage(QWidget* parent = nullptr);
-	~ProductPage();
-	ShoppingManager* manager;
+    ProductPage(QWidget* parent = nullptr);
+    ~ProductPage();
+
+    void setManager(ShoppingManager* mgr) { manager = mgr; }
+	ShoppingManager* manager = nullptr;
+
 
 protected:
-	void showEvent(QShowEvent* event) override;
-	void keyPressEvent(QKeyEvent* event) override;
+    void showEvent(QShowEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+
+private slots:
+    void loadAllProducts();
+    void searchProduct();
+    void addProduct();
+    void refreshTable();
+    void onSearchTextChanged();
+    void onCategoryFilterChanged(int index);
+    void onSortFilterChanged(int index);
+    void clearAllFilters();
+    void onThemeChanged(bool isDarkMode);
 
 private:
-	Ui::ProductPage* ui;
-	QStandardItemModel* localModel;
-	bool isCached;
-	int totalProductCount;
-	int selectedCount;
-    QNetworkAccessManager* networkManager;
+    Ui::ProductPage* ui;
+    QStandardItemModel* localModel = nullptr;
+    QNetworkAccessManager* networkManager = nullptr;
 
+    // 现代化UI组件
+    QScrollArea* scrollArea = nullptr;
+    QWidget* cardContainer = nullptr;
+    QVBoxLayout* cardLayout = nullptr;
+    QHBoxLayout* filtersLayout = nullptr;
+    CustomComboBox* categoryFilter = nullptr;
+    CustomComboBox* sortFilter = nullptr;
+
+    // 数据
+    QJsonArray allProducts;
+    bool isCached;
+    int totalProductCount;
+    int selectedCount;
+
+    // UI创建方法
+    void createLocalModel();
+    void createModernUI();
+    void setupFilters();
+    void setupConnections();
+
+    // 商品卡片
+    void createProductCard(const QJsonObject& product);
+    void clearProductCards();
+
+    // 数据处理
+    void displayProducts(const QJsonArray& products);
+    void addProductToModel(const QJsonObject& product);
+    void applyFilters();
+
+    // 筛选和排序
+    QJsonArray filterBySearch(const QJsonArray& products, const QString& searchText);
+    QJsonArray filterByCategory(const QJsonArray& products, const QString& category);
+    QJsonArray sortProducts(const QJsonArray& products, int sortType);
+
+    // 图片处理
     void loadProductImage(QLabel* imageLabel, const QString& imagePath);
     QString getImageUrl(const QString& imagePath);
     void setDefaultProductImage(QLabel* imageLabel);
 
-	// 数据存储
-	QJsonArray allProducts;       // 存储所有商品数据
-	QJsonArray filteredProducts;  // 存储筛选后的数据
-	QList<QJsonObject> selectedProducts; // 存储选中的商品
+    // 服务器操作
+    bool addProductToServer(const QJsonObject& product);
+    bool updateProductToServer(const QJsonObject& product);
+    bool deleteProductFromServer(const QString& productId);
 
-	// UI组件
-	QScrollArea* scrollArea;
-	QWidget* cardContainer;
-	QVBoxLayout* cardLayout;
-	QHBoxLayout* filtersLayout;
-	QComboBox* categoryFilter;
-	QComboBox* sortFilter;
-
-	// 私有方法
-	void setupConnections();
-	void createLocalModel();
-	void updateStatistics();
-	void updateSelectionInfo();
-	void addProductToModel(const QJsonObject& product);
-	QString formatSearchFilter(const QString& searchText);
-	bool validateProductData(int row);
-	void showProductDetails(int row);
-	QJsonObject getProductFromRow(int row);
-	void setRowData(int row, const QJsonObject& product);
-
-	// 现代化UI相关
-	void createModernUI();
-	void createProductCard(const QJsonObject& product);
-	void clearProductCards();
-	void setupFilters();
-	void displayProducts(const QJsonArray& products);
-
-	// 筛选和排序
-	void applyFilters();
-	QJsonArray filterByCategory(const QJsonArray& products, const QString& category);
-	QJsonArray filterBySearch(const QJsonArray& products, const QString& searchText);
-	QJsonArray sortProducts(const QJsonArray& products, int sortType);
-    void showEditProductDialog(const QJsonObject& product);
-	// 商品操作
-	bool addProductToServer(const QJsonObject& product);
-	bool updateProductOnServer(const QJsonObject& product, const QString& productId);
-	bool deleteProductFromServer(const QString& productId);
+    // 对话框
     void showAddProductDialog();
-private slots:
-	void submitChange();
-	void backChange();
-	void searchProduct();
-	void addProduct();
-	void delProduct();
-	void refreshTable();
-	void onSearchTextChanged();
-	void onSelectionChanged();
-	void onTableDoubleClicked(const QModelIndex& index);
-	void onThemeChanged(bool isDarkMode);
+    void showEditProductDialog(const QJsonObject& product);
 
-	// 网络请求槽函数
-	void loadAllProducts();
-	void saveProductChanges();
-	void deleteSelectedProducts();
+    // 统计更新
+    void updateStatistics();
+    void updateSelectionInfo();
 
-	// 筛选器槽函数
-	void onCategoryFilterChanged(int index);
-	void onSortFilterChanged(int index);
-	void clearAllFilters();
-
-signals:
-	void productAdded(int productId);
-	void productDeleted(int productId);
-	void productUpdated(int productId);
-	void selectionChanged(int count);
 };
 
 #endif // PRODUCTPAGE_H

@@ -221,6 +221,7 @@
     <ClCompile Include="Shop\productitem.cpp" />
     <ClCompile Include="Shop\productpage.cpp" />
     <ClCompile Include="registerwgt.cpp" />
+    <ClCompile Include="Order\returndialog.cpp" />
     <ClCompile Include="Shop\shoppage.cpp" />
     <ClCompile Include="shoppingclient.cpp" />
     <ClCompile Include="slidenavigation.cpp" />
@@ -245,6 +246,7 @@
     <QtMoc Include="Shop\productitem.h" />
     <QtMoc Include="Shop\productpage.h" />
     <QtMoc Include="registerwgt.h" />
+    <QtMoc Include="Order\returndialog.h" />
     <QtMoc Include="Shop\shoppage.h" />
     <QtMoc Include="shoppingclient.h" />
     <QtMoc Include="slidenavigation.h" />
@@ -285,6 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="images\picturewall\1.jpg" />
+    <None Include="images\icons\1.png" />
     <None Include="images\login\1.png" />
     <None Include="images\picturewall\10.jpg" />
     <None Include="images\picturewall\11.jpg" />
@@ -293,7 +296,9 @@
     <None Include="images\picturewall\14.jpg" />
     <None Include="images\picturewall\15.jpg" />
     <None Include="images\picturewall\2.jpg" />
+    <None Include="images\icons\2.png" />
     <None Include="images\picturewall\3.jpg" />
+    <None Include="images\icons\3.png" />
     <None Include="images\picturewall\4.jpg" />
     <None Include="images\picturewall\5.jpg" />
     <None Include="images\picturewall\6.jpg" />
@@ -303,14 +308,12 @@
     <None Include="images\users\82342070_p0-min.jpg" />
     <None Include="images\picturewall\9.jpg" />
     <None Include="images\products\adidas_tshirt.jpg" />
+    <None Include="images\login\avatar.jpg" />
     <None Include="images\login\bg_login.jpg" />
     <None Include="images\login\bg_register_wizard.jpg" />
     <None Include="images\products\chanel.jpg" />
     <None Include="images\icons\down-arrow.png" />
     <None Include="images\products\error.jpg" />
-    <None Include="images\icons\icon1.png" />
-    <None Include="images\icons\icon2.png" />
-    <None Include="images\icons\icon3.png" />
     <None Include="images\users\illust_35548907_20190130_151911-min.jpg" />
     <None Include="images\users\illust_54355379_20190130_152051-min.jpg" />
     <None Include="images\users\illust_58445343_20190421_183611-min.png" />

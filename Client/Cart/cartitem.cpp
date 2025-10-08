@@ -62,15 +62,6 @@ CartItem::~CartItem()
 
 void CartItem::setupUI()
 {
-    // 移除会覆盖UI文件样式的代码，只保留必要的设置
-
-    // 不再设置图片容器样式，使用UI文件中的样式
-    // ui->widMusicPic->setStyleSheet("QWidget{border:1px solid #CCC; background:#F7F7F7;}");
-
-    // 简化SpinBox样式，与UI文件协调
-    // 移除 setFixedHeight，让UI文件的布局决定高度
-    // ui->spinBox->setFixedHeight(32);
-
     // 确保控件启用
     ui->spinBox->setEnabled(true);
 

@@ -12,8 +12,11 @@ CONFIG += c++11
 
 SOURCES += \
     contactpage.cpp \
+    customcombobox.cpp \
+    customspinbox.cpp \
     loginwgt.cpp \
     main.cpp \
+    orderdetaildialog.cpp \
     orderpage.cpp \
     productpage.cpp \
     prosesspage.cpp \
@@ -23,7 +26,10 @@ SOURCES += \
 
 HEADERS += \
     contactpage.h \
+    customcombobox.h \
+    customspinbox.h \
     loginwgt.h \
+    orderdetaildialog.h \
     orderpage.h \
     productpage.h \
     prosesspage.h \

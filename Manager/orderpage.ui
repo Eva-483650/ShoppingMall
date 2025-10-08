@@ -6,129 +6,420 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>442</height>
+    <width>800</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>订单管理</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <property name="styleSheet">
+   <string notr="true">
+/* 主容器样式 */
+QWidget#OrderPage {
+    background: transparent;
+    font-family: &quot;微软雅黑&quot;;
+}
+
+/* 标题区域 */
+QWidget#headerWidget {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 rgba(161, 140, 209, 0.1),
+                stop:1 rgba(184, 164, 230, 0.1));
+    border-radius: 15px;
+    border: 1px solid rgba(161, 140, 209, 0.3);
+}
+
+QLabel#titleLabel {
+    color: #6c5b7b;
+    font: 700 16pt &quot;微软雅黑&quot;;
+    background: transparent;
+    border: none;
+}
+
+QLabel#subtitleLabel {
+    color: #8b78c4;
+    font: 11pt &quot;微软雅黑&quot;;
+    background: transparent;
+    border: none;
+}
+
+/* 统计卡片 */
+QWidget#statsWidget {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 201, 247, 0.6);
+}
+
+QLabel#statsLabel {
+    color: #6c5b7b;
+    font: 600 10pt &quot;微软雅黑&quot;;
+    background: transparent;
+}
+
+QLabel#countLabel {
+    color: #a18cd1;
+    font: 700 14pt &quot;微软雅黑&quot;;
+    background: transparent;
+}
+
+/* 操作区域 */
+QWidget#actionWidget {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 201, 247, 0.6);
+}
+
+/* 搜索区域 */
+QWidget#searchWidget {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 201, 247, 0.6);
+}
+
+QLineEdit#searchInput {
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(214, 201, 247, 0.5);
+    border-radius: 10px;
+    padding: 12px 15px;
+    font: 11pt &quot;微软雅黑&quot;;
+    color: #5a4c74;
+}
+
+QLineEdit#searchInput:focus {
+    border: 2px solid #a18cd1;
+    background: white;
+}
+
+QLineEdit#searchInput:hover {
+    border: 2px solid rgba(161, 140, 209, 0.7);
+}
+
+/* 主要按钮样式 - 紫色主题 */
+QPushButton#btn_submit, QPushButton#btn_search {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #b8a4e6, stop:1 #a18cd1);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font: 600 11pt &quot;微软雅黑&quot;;
+    min-width: 100px;
+}
+
+QPushButton#btn_submit:hover, QPushButton#btn_search:hover {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #a18cd1, stop:1 #9179c4);
+}
+
+QPushButton#btn_submit:pressed, QPushButton#btn_search:pressed {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:1,y2:0,
+                stop:0 #9179c4, stop:1 #8066b7);
+}
+
+/* 次要按钮样式 - 浅紫色 */
+QPushButton#btn_back, QPushButton#btn_refresh {
+    background: rgba(184, 164, 230, 0.3);
+    border: 2px solid rgba(161, 140, 209, 0.5);
+    border-radius: 10px;
+    padding: 10px 15px;
+    font: 600 11pt &quot;微软雅黑&quot;;
+    color: #7a6599;
+}
+
+QPushButton#btn_back:hover, QPushButton#btn_refresh:hover {
+    background: rgba(184, 164, 230, 0.5);
+    border: 2px solid #a18cd1;
+}
+
+QPushButton#btn_back:pressed, QPushButton#btn_refresh:pressed {
+    background: rgba(184, 164, 230, 0.7);
+}
+
+/* 表格样式 */
+QWidget#tableWidget {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 201, 247, 0.6);
+}
+
+QTableView {
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    gridline-color: rgba(214, 201, 247, 0.4);
+    font: 10pt &quot;微软雅黑&quot;;
+    color: #5a4c74;
+    selection-background-color: rgba(161, 140, 209, 0.2);
+}
+
+QTableView::item {
+    padding: 8px;
+    border-bottom: 1px solid rgba(214, 201, 247, 0.3);
+}
+
+QTableView::item:selected {
+    background: rgba(161, 140, 209, 0.2);
+    color: #5a4c74;
+}
+
+QTableView::item:hover {
+    background: rgba(214, 201, 247, 0.2);
+}
+
+QHeaderView::section {
+    background: qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,
+                stop:0 rgba(184, 164, 230, 0.8),
+                stop:1 rgba(161, 140, 209, 0.8));
+    color: white;
+    padding: 10px 8px;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    font: 600 10pt &quot;微软雅黑&quot;;
+}
+
+QHeaderView::section:first {
+    border-top-left-radius: 8px;
+}
+
+QHeaderView::section:last {
+    border-top-right-radius: 8px;
+    border-right: none;
+}
+
+/* 滚动条样式 */
+QScrollBar:vertical {
+    background: rgba(214, 201, 247, 0.3);
+    width: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(161, 140, 209, 0.6);
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #a18cd1;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar:horizontal {
+    background: rgba(214, 201, 247, 0.3);
+    height: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal {
+    background: rgba(161, 140, 209, 0.6);
+    border-radius: 4px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #a18cd1;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    border: none;
+    background: none;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>20</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>20</number>
+   </property>
    <item>
-    <widget class="QTableView" name="tableView">
-     <property name="sortingEnabled">
-      <bool>true</bool>
+    <widget class="QWidget" name="headerWidget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>60</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget_2" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="headerLayout">
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>15</number>
       </property>
       <item>
-       <widget class="QWidget" name="widget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="titleLayout">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="titleLabel">
+          <property name="text">
+           <string>订单管理中心</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="headerSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QWidget" name="statsWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="statsLayout">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <property name="leftMargin">
+          <number>15</number>
+         </property>
          <property name="topMargin">
-          <number>0</number>
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>15</number>
          </property>
          <property name="bottomMargin">
-          <number>0</number>
+          <number>8</number>
          </property>
          <item>
-          <widget class="QPushButton" name="btn_submit">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
+          <widget class="QLabel" name="statsLabel">
            <property name="text">
-            <string>提交修改</string>
+            <string>订单总数</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="btn_back">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
+          <widget class="QLabel" name="countLabel">
            <property name="text">
-            <string>撤销修改</string>
+            <string>0</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_refresh">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>刷新</string>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="tableWidget" native="true">
+     <layout class="QVBoxLayout" name="tableLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>15</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>15</number>
+      </property>
+      <property name="bottomMargin">
+       <number>15</number>
+      </property>
       <item>
-       <widget class="QWidget" name="widget_3" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="topMargin">
-          <number>4</number>
-         </property>
-         <property name="bottomMargin">
-          <number>4</number>
-         </property>
-         <item>
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="placeholderText">
-            <string>请输入查询条件（SQL语句）</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_search">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>搜索</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+       <layout class="QHBoxLayout" name="tableHeaderLayout">
+        <item>
+         <widget class="QLabel" name="tableHeaderLabel">
+          <property name="styleSheet">
+           <string notr="true">color: #6c5b7b; font: 600 12pt &quot;微软雅黑&quot;; background: transparent;</string>
+          </property>
+          <property name="text">
+           <string>订单列表</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="tableHeaderSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="selectionLabel">
+          <property name="styleSheet">
+           <string notr="true">color: #8b78c4; font: 10pt &quot;微软雅黑&quot;; background: transparent;</string>
+          </property>
+          <property name="text">
+           <string>已选择 0 项</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTableView" name="tableView">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
      </layout>
